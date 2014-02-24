@@ -1,0 +1,172 @@
+\section{Thermal nonequilibrium mass transport with gas-solid reactions}
+Note: This process is implemented in OGS5 only. The inclusion here illustrates the information that should be included. Note, that for less complex processes the list of equations won't be that long.
+
+\subsection{Version information}
+Original implementation in version: 5.4.05
+
+This documentation applies to version: 5.4.05 ff.
+
+Contact: \url{thomas.nagel@ufz.de}
+
+\subsection{Process description}
+This process models non-isothermal reactive multicomponent gas transport through a porous solid for the application to, e.g., thermochemical heat storage systems in directly permeated set ups. The model was based on the assumption of local thermal nonequilibrium allowing different solid and gas temperatures.
+
+Details in the following references: \cite{Nagel2013,Shao2013}
+
+The process is invoked using the keyword \texttt{\$TNEQ}\index{TNEQ}.
+
+\subsection{Benchmarks}
+T2HC/heat\_of\_reaction/reaction\_heat\\
+T2HC/heat\_transfer/heat\_transfer\\
+T2HC/friction/Friction\_test\\
+T2HC/Convection\_2D/conv\_2d\_cart\\
+T2HC/Convection\_2D\_axi/conv\_2d\_axi
+
+\subsection{Specific assumptions}
+\begin{itemize}
+	\item Constant porosity
+	\item Fourier's law
+	\item Darcy's law
+	\item Fick's law
+	\item Small deviations from thermodynamic equilibrium
+	\item Rigid immobile solid
+	\item Ideal gas mixture
+	\item Negligible influence of changing molar mass on diffusion description
+\end{itemize}
+
+\subsection{Governing PDEs}
+Mass balance of the gas phase:
+\beq
+	(\phi_G \rho_{GR})'_G + \phi_G  \rho_{GR} \mdiv \mbf{v}_G = - \hat{\rho}_S \label{eq:mass_bal}
+\eeq
+Energy balance of the gas phase:
+\begin{align}
+	&\phi_G \rho_{GR} c_{pG} (T_G)'_G = h_{SG} (T_S - T_G) +\mdiv[\phi_G\mbf{\lambda}_{GR}\, \grad T_G] + \phi_G T_G \alpha_T (p)'_G + p (\phi_G)'_G \label{eq:gas_en_bal}
+\end{align}
+Energy balance of the solid phase:
+\begin{align}
+	&(1-\phi_G) \rho_{SR} c_{pS} (T_S)'_S = h_{SG} (T_G - T_S) + \mdiv ((1-\phi_G) \mbfs{\lambda}_{SR} \grad T_S) - \hat{\mbf{p}}_G \cdot \mbf{w}_G + \hat{\rho}_S \left[ \Delta h + c_{pR} (T_G - T_S) \right] \label{eq:solid_en_bal}\\
+	&\qquad \mwith \hat{\mbf{p}}_G = - \phi_G^2 \mu_V \mbf{k}_S^{-1} \mbf{w}_G + \frac{T_S}{T_G} p \grad \phi_G = \grad(\phi_G p)\nn
+\end{align}
+Mass balance of the reactive component within the gas phase:
+\begin{align}
+	&\phi_G \rho_{GR} (x_{mR})'_G - \mdiv(\rho_{GR} \mbf{D} \grad x_{mR}) = -(1 - x_{mR}) \hat{\rho}_S \label{eq:comp_mass_bal}\\
+\end{align}
+
+\subsection{Weak forms}
+The weak form of the gas mass balance reads
+\begin{align}
+	&\int \limits_\Omega \left[ \phi_G \rho_{GR} \beta_p \ptd{p} \delta p - \phi_G \rho_{GR} \alpha_T \ptd{T_G} \delta p + \phi_G \frac{\partial \rho_{GR}}{\partial x_{mR}} \frac{\partial x_{mR}}{\partial t} \delta p - \rho_{GR} \tilde{\mbf{w}}_G \cdot \grad \delta p + \hat{\rho}_S \delta p \right] \mathd \Omega =\nn\\
+	&\qquad =\int \limits_{\partial \Omega_w} \underbrace{- \rho_{GR} \tilde{\mbf{w}}_{G} \cdot \mbf{n}}_{:= \dot{m}_n} \delta p \mathd \Gamma
+\end{align}
+The gas energy balance reads
+\begin{align}
+	&\int \limits_\Omega \left[ \phi_G \rho_{GR} c_{pG} \frac{\partial T_G}{\partial t} \delta T_G + \rho_{RG} c_{pG}\,\grad T_G \cdot \tilde{\mbf{w}}_G \delta T_G - h_{SG} (T_S - T_G) \delta T_G + \phi_G\mbf{\lambda}_{GR}\, \grad T_G \cdot \grad \delta T_G - \right.\nn\\
+	& \left. - \phi_G T_G \alpha_T \frac{\partial p}{\partial t} \delta T_G - \alpha_T T_G \grad p \cdot \tilde{\mbf{w}}_G  \delta T_G - p \phi_G^{-1} \grad \phi_G \cdot \tilde{\mbf{w}}_G \delta T_G \right] \mathd \Omega + \int \limits_{\partial \Omega_{qG}} \underbrace{\mbf{q}_G \cdot \mbf{n}}_{:= - q_n^G} \delta T_G \mathd \Gamma= 0
+\end{align}
+The solid energy balance reads
+\begin{align}
+	&\int \limits_\Omega \left[ (1-\phi_{G}) \rho_{SR} c_{pS} \frac{\partial T_S}{\partial t} \delta T_S + (1-\phi_{G}) \mbf{\lambda}_S \grad T_S \cdot \grad \delta T_S - h_{SG} (T_G - T_S) \delta T_S - \right. \nn\\
+	&\qquad \left. + \hat{\mbf{p}}_G \cdot \mbf{w}_G \delta T_S - \hat{\rho}_S [\Delta h + c_{pV} (T_G - T_S)] \delta T_S \white \int \hspace{-3mm} \black \right] \mathd \Omega + \int \limits_{\partial \Omega_{qS}} \underbrace{\mbf{q}_S \cdot \mbf{n}}_{:=-q_{nS}} \delta T_S \mathd \Gamma= 0
+\end{align}
+The reactive component gas mass balance:
+\begin{align}
+	&\int \limits_\Omega \left[ \phi_G \rho_{GR} \frac{\partial x_{mR}}{\partial t} \delta x + \phi_G \rho_{GR} \mbf{v}_G \cdot \grad x_{mR} \delta x + \phi_G \rho_{GR} \mbf{D} \grad x_{mR} \cdot \grad \delta x + \right. \nn\\
+		&\qquad  \left. + (1 - x_{mR}) \hat{\rho}_S \delta x \white \frac{}{} \black \right] \mathd \Omega = \int \limits_{\partial \Omega_{d}} \underbrace{\phi_G \rho_{GR}  \mbf{D} \grad x_{mR} \cdot \mbf{n}}_{:=d_n} \delta x \mathd \Gamma
+\end{align}
+
+\subsection{Linearised Weak forms}
+No linearisation performed. The discrete system is solved with Picard iterations only.
+
+\subsection{Discretisation}
+
+The assembled discrete system of equations reads
+\begin{align}
+	&\left(
+		\begin{array}{cccc}
+			\mbf{M}_{pp} & \mbf{M}_{pT} & \mbf{0} & \mbf{M}_{px}\\
+			\mbf{M}_{Tp} & \mbf{M}_{TT}^G & \mbf{0} & \mbf{0}\\
+			\mbf{0} & \mbf{0} & \mbf{M}_{TT}^S & \mbf{0}\\
+			\mbf{0} & \mbf{0} & \mbf{0} & \mbf{M}_{xx}
+		\end{array}
+	\right)
+	\left(
+		\begin{array}{l}
+			\dot{\tilde{\mbf{p}}}\\
+			\dot{\tilde{\mbf{T}}}_G\\
+			\dot{\tilde{\mbf{T}}}_S\\
+			\dot{\tilde{\mbf{x}}}_{mR}
+		\end{array}
+	\right)
+	+ \label{eq:final_fe}\\
+	&+ \left(
+		\begin{array}{cccc}
+			\mbf{L}_{pp} + \widehat{\mbf{A}}_{pp} & \mbf{0} & \mbf{0} & \mbf{0}\\
+			\mbf{A}_{Tp}^G & \mbf{C}_{TT}^G + \mbf{A}_{TT}^G + \mbf{L}_{TT}^G & \mbf{C}_{TT}^{GS} & \mbf{0}\\
+			\mbf{0} & \mbf{C}_{TT}^{SG} & \mbf{C}_{TT}^S + \mbf{L}_{TT}^S & \mbf{0}\\
+			\mbf{0} & \mbf{0} & \mbf{0} & \mbf{C}_{xx} + \mbf{A}_{xx} + \mbf{L}_{xx}
+		\end{array}
+	\right)
+	\left(
+		\begin{array}{l}
+			{\tilde{\mbf{p}}}\\
+			{\tilde{\mbf{T}}}_G\\
+			{\tilde{\mbf{T}}}_S\\
+			{\tilde{\mbf{x}}}_{mR}
+		\end{array}
+	\right)
+	=
+	\left(
+		\begin{array}{cccc}
+			\mbf{f}_p\\
+			\mbf{f}_T^G\\
+			\mbf{f}_T^S\\
+			\mbf{f}_x
+		\end{array}
+	\right) \nn
+\end{align}
+
+System matrices:
+
+\begin{multicols}{2}
+{\small{
+\begin{flalign}
+	\mbf{M}_{pp} &= \int \limits_\Omega \mbf{G}_L^T \phi_G \rho_{GR} \beta_p \mbf{G}_L \mathd \Omega&\\
+	\mbf{M}_{pT} &= \int \limits_\Omega \mbf{G}_L^T (- \phi_G \rho_{GR} \alpha_T) \mbf{G}_L \mathd \Omega&\\
+	\mbf{M}_{px} &= \int \limits_\Omega \mbf{G}_L^T \frac{\phi_G \partial \rho_{GR}}{\partial x_{mV}} \mbf{G}_L \mathd \Omega&\\
+	\mbf{M}_{TT}^G &= \int \limits_\Omega \mbf{G}_L^T \phi_G \rho_{GR} c_{pG} \mbf{G}_L \mathd \Omega&\\
+	\mbf{M}_{Tp} &= \int \limits_\Omega \mbf{G}_L^T (-\phi_G T_G \alpha_T) \mbf{G}_L \mathd \Omega&\\
+	\mbf{M}_{TT}^S &= \int \limits_\Omega \mbf{G}_L^T (1-\phi_G) \rho_{SR} c_{pS} \mbf{G}_L \mathd \Omega&\\
+	\mbf{M}_{xx} &= \int \limits_\Omega \mbf{G}_L^T \phi_G \rho_{GR} \mbf{G}_L \mathd \Omega
+\end{flalign}
+\begin{flalign}
+	\mbf{C}_{TT}^{GS} &= \vint{\mbf{G}_L^T (-h_{SG}) \mbf{G}_L}&\\
+	\mbf{C}_{TT}^G &= \vint{\mbf{G}_L^T h_{SG} \mbf{G}_L}&\\
+	\mbf{C}_{Tp} &= \vint{\mbf{G}^T_L (-\phi_G^{-1} \grad \phi_G \cdot \tilde{\mbf{w}}_G) \mbf{G}_L}&\\
+	\mbf{C}_{TT}^{SG} &= \int \limits_\Omega \mbf{G}_L^T (-h_{SG} - \hat{\rho}_S c_{pV}) \mbf{G}_L \mathd \Omega&\\
+	\mbf{C}_{TT}^S &= \vint{\mbf{G}_L^T [h_{SG} + \hat{\rho}_S c_{pV} ] \mbf{G}_L}&\\
+	\mbf{C}_{xx} &= \vint{\mbf{G}_L^T (-\hat{\rho}_S) \mbf{G}_L}
+\end{flalign}
+\begin{flalign}
+	\mbf{L}_{pp} &= \int \limits_\Omega \nabla \mbf{G}_L^T \rho_{GR} \mbf{k} \nabla \mbf{G}_L \mathd \Omega&\\
+	\mbf{L}_{TT}^G &= \vint{\nabla \mbf{G}_L^T \phi_G \mbf{\lambda}_{GR} \nabla \mbf{G}_L}&\\
+	\mbf{L}_{TT}^S &= \vint{\nabla \mbf{G}_L^T (1-\phi_G) \mbf{\lambda}_S \nabla \mbf{G}_L}&\\
+	\mbf{L}_{xx} &= \vint{\nabla \mbf{G}^T_L \phi_G \rho_{GR} \mbf{D} \nabla \mbf{G}_L}
+\end{flalign}
+\begin{flalign}
+	\mbf{A}_{TT}^G &= \vint{\mbf{G}_L^T \rho_{GR} c_{pG} \tilde{\mbf{w}}_G \nabla \mbf{G}_L}&\\
+	\mbf{A}_{Tp}^G &= \vint{\mbf{G}_L^T (-\alpha_T T_G) \tilde{\mbf{w}}_G \nabla \mbf{G}_L}&\\
+	\mbf{A}_{xx} &= \vint{\mbf{G}_L^T \rho_{GR} \tilde{\mbf{w}}_G \nabla \mbf{G}_L}
+\end{flalign}
+\begin{flalign}
+	\widehat{\mbf{A}}_{pp} &= \int \limits_\Omega \nabla \mbf{G}_L^T \rho_{GR} \mbf{k} \phi_G^{-1} \left(1 - \frac{T_S}{T_G} \right) \grad{\phi_G} \mbf{G}_L \mathd \Omega&
+\end{flalign}
+\begin{flalign}
+	\mbf{f}_p &= \int \limits_{\partial \Omega_w} \dot{m}_n \mbf{G}_L^T \mathd \Gamma - \int \limits_\Omega \hat{\rho}_S \mbf{G}_L^T \mathd \Omega - \vint{\nabla \mbf{G}_L^T \rho_{GR}^2 \mbf{k} \mbf{b}_G}&\\
+	\mbf{f}_T^G &= \int \limits_{\partial \Omega_{qG}} q_n^G \mbf{G}_L^T \mathd \Gamma&\\
+	\mbf{f}_T^S &= \int \limits_{\partial \Omega_{qS}} q_{nS} \mbf{G}_L^T \mathd \Gamma + \int \limits_\Omega \left[ \hat{\rho}_S \Delta h - \hat{\mbf{p}}_G \cdot \mbf{w}_G \right] \mbf{G}_L^T \mathd \Omega&\\
+	\mbf{f}_{x} &= \int \limits_\Omega (-\hat{\rho}_S) \mbf{G}_L^T \mathd \Omega + \int \limits_{\partial \Omega_d} d_n \mbf{G}_L^T \mathd \Gamma
+\end{flalign}
+}}
+\end{multicols}
+

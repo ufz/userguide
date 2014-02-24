@@ -1,0 +1,50 @@
+\chapter{How to use this manual}
+
+\section{Adding authors}
+Anyone who adds content to this file should add their name and affiliation to the list in the main file at which point they will automatically appear on the title page. The format to include yourself is 
+\begin{verbatim}
+	\author[0815]{Smart McGenius}
+	\affil[0815]{Gewandhaus Leipzig}
+\end{verbatim}
+
+\section{Adding content}
+If you add content, create a subdirectory with an appropriate name (e.g. process type or name of the numerical algorithm) and use \texttt{input} in the main file to include your content.
+
+\section{Nomenclature}
+We ask authors to stick to the standard nomenclature provided as far as possible (i.e. not to define five different symbols for porosity) and add any new symbols to the nomenclature. To have all definitions in one place and facilitate maintainance please add nomenclature definitions to the file \textit{nomenclature.tex}
+
+For example, the definition of a volume fraction $\phi_\alpha$ will be as follows
+\begin{verbatim}
+	\nomenclature[gp]{$\phi_\alpha$}{Volume fraction of constituent $\alpha$.}
+\end{verbatim}
+The first letter in the square brackets denotes which part of the nomenclature the defined symbol belongs to: \texttt{g} -- Greek symbols, \texttt{r} -- Roman symbols or \texttt{o} -- mathematical Operators. The second (and following) letter is used by Latex for alphabetic sorting.
+
+\section{Keyword indexing}
+If you refer to OGS keywords, please add them to the index by using the command:
+\begin{verbatim}
+	\nomenclature[gp]{$\phi_\alpha$}{Volume fraction of constituent $\alpha$.}
+\end{verbatim}
+
+\section{References}
+If you refer to published material reference it by including the appropriate *.bib file.
+
+\section{Figures and labelling}
+Figures should be provided as pdf or png files. Labels given to figures and equations should be unique so as to avoid overlapping label definitions. We suggest to include a process acronym and author initials into the label to facilitate this.
+
+\section{Compilation}
+The document is to be compiled with pdflatex:
+\begin{verbatim}
+	pdflatex Theory_Manual.tex
+\end{verbatim}
+The nomenclature can be built with
+\begin{verbatim}
+	makeindex Theory_Manual.nlo -s nomencl.ist -o Theory_Manual.nls
+\end{verbatim}
+The bibliography can be built with 
+\begin{verbatim}
+	bibtex Theory_Manual
+\end{verbatim}
+The index, finally, is built with:
+\begin{verbatim}
+	makeindex Theory_Manual
+\end{verbatim}
