@@ -1,7 +1,7 @@
 \chapter{How to use this manual}
 
 \section{What it is about}
-This manual contains details of the theory behind OGS6. This encompasses both numerical as well as physical (process) issues. Process descriptions will contain specific assumptions, benchmark lists, governing PDEs and weak forms, linearisations where appropriate (Newton-Raphson) and FE matrices.
+This manual will contain tutorials and instructions on how to set up models in OGS6. It will contain information on how to write input files, which keywords to use, an index of these keywords and reference results.
 
 \section{Adding authors}
 Anyone who adds content to this file should add their name and affiliation to the list in the main file at which point they will automatically appear on the title page. The format to include yourself is 
@@ -12,15 +12,6 @@ Anyone who adds content to this file should add their name and affiliation to th
 
 \section{Adding content}
 If you add content, create a subdirectory with an appropriate name (e.g. process type or name of the numerical algorithm) and use \texttt{input} in the main file to include your content.
-
-\section{Nomenclature}
-We ask authors to stick to the standard nomenclature provided as far as possible (i.e. not to define five different symbols for porosity) and add any new symbols to the nomenclature. To have all definitions in one place and facilitate maintainance please add nomenclature definitions to the file \textit{nomenclature.tex}
-
-For example, the definition of a volume fraction $\phi_\alpha$ will be as follows
-\begin{verbatim}
-	\nomenclature[gp]{$\phi_\alpha$}{Volume fraction of constituent $\alpha$.}
-\end{verbatim}
-The first letter in the square brackets denotes which part of the nomenclature the defined symbol belongs to: \texttt{g} -- Greek symbols, \texttt{r} -- Roman symbols or \texttt{o} -- mathematical Operators. The second (and following) letter is used by Latex for alphabetic sorting.
 
 \section{Keyword indexing}
 If you refer to OGS keywords, please add them to the index by using the \texttt{\\index} command:
@@ -43,10 +34,6 @@ Figures should be provided as pdf or png files. Any labels given to figures and 
 The document is to be compiled with pdflatex:
 \begin{verbatim}
 	pdflatex Theory_Manual.tex
-\end{verbatim}
-The nomenclature can be built with
-\begin{verbatim}
-	makeindex Theory_Manual.nlo -s nomencl.ist -o Theory_Manual.nls
 \end{verbatim}
 The bibliography can be built with 
 \begin{verbatim}

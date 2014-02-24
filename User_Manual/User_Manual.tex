@@ -1,4 +1,4 @@
-\documentclass[11pt,twoside,fleqn,idxtotoc]{scrreprt}
+\documentclass[11pt,twoside,fleqn]{scrreprt}
 %\usepackage[utf8x]{inputenc}
 %\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -29,7 +29,7 @@
 \usepackage{url}
 \usepackage{multicol}
 \usepackage{authblk}
-\usepackage[intoc]{nomencl}
+%\usepackage{nomencl}
 \usepackage{makeidx}
 \normalem
 
@@ -50,12 +50,12 @@
 
 \makeindex
 
-\makenomenclature
+%\makenomenclature
 %Define groups for nomenclature: Roman, Greek and Operators
-\RequirePackage{ifthen}
-\renewcommand{\nomgroup}[1]{\bigskip%
-\ifthenelse{\equal{#1}{R}}{\item[\textit{Roman symbols}]}{%
-\ifthenelse{\equal{#1}{G}}{\item[\textit{Greek symbols}]}{\ifthenelse{\equal{#1}{O}}{\item[\textit{Operators}]}}}}
+%\RequirePackage{ifthen}
+%\renewcommand{\nomgroup}[1]{\bigskip%
+%\ifthenelse{\equal{#1}{R}}{\item[\textit{Roman symbols}]}{%
+%\ifthenelse{\equal{#1}{G}}{\item[\textit{Greek symbols}]}{\ifthenelse{\equal{#1}{O}}{\item[\textit{Operators}]}}}}
 
 
 
@@ -81,19 +81,12 @@
 \tableofcontents
 \clearpage
 
+%Nomenclature
+%\printnomenclature%makeindex [].nlo -s nomencl.ist -o [].nls
+%\input{nomenclature}
+
 %Introduction, User guide
 \input{howto}
-
-%Chapter numerical methods
-\chapter{Numerics}
-List time stepping, nonlinear solution strategies, error norms, element types etc. here.
-%
-\chapter{Physical Models}
-\input{TNEQ/TNEQ.tex}
-
-%Nomenclature
-\printnomenclature%makeindex [].nlo -s nomencl.ist -o [].nls
-\input{nomenclature}
 
 \renewcommand{\indexname}{Keyword index}
 \printindex

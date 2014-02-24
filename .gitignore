@@ -21,7 +21,9 @@
 *.mtc0
 *.nav
 *.nlo
+*.nls
 *.out
+*.pdf
 *.pdfsync
 *.ps
 *.snm
