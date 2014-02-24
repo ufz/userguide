@@ -6,6 +6,26 @@
 
 \subsection{Available UserModules to simulate Reactive Transport Processes}
 
+Currently, there are three user modules implemented in ogs6 for the reactive transport simulations. Their names, underlying numerical algorithm, and applicable reaction types are summarized in Table \ref{RT_tab_rt_modules}. 
+
+The ogs5 users might know, that ogs5 adopted the operator splitting scheme to simulate reactive transport processes. Also, several different chemical solvers, like PhreeqC (CITATION), GEM (CITATION), and ChemApp (CITATION) have been integrated to run the nodal-based local chemistry systems. There are currently plans to re-implements these old features into ogs6, the supported user modules that can run reactive transport simulations  will be extended in the future. 
+\begin{table}
+\label{RT_tab_rt_modules}
+\caption{Reactive Transport User Modules implemented in ogs6. }
+\begin{tabular}{c c p{6cm}}
+\hline
+Names of the User Modules    & Type of reactions & Underlying Numerical Algorithm \\
+\hline
+$\mathrm{REACT\_TRANS\_OPS}$      & Equilibrium and Kinetic Reactions    & Operator Splitting (Sequential Non-Iterative)      \\
+$\mathrm{REACT\_GIA\_KIN}$        & Kinetic reactions only     & Global implicit approach with partial reduction scheme      \\
+$\mathrm{REACT\_GIA}$            & Equilibrium and Kinetic Reactions     & Global implicit approach with reduction scheme      \\
+\hline
+\end{tabular}
+\end{table}
+
+
+Here in this document, we focus on the two user modules $\mathrm{REACT\_TRANS\_OPS}$ and $\mathrm{REACT\_GIA}$, since the $\mathrm{REACT\_GIA}$ module can also handle kinetic controlled reactions as well. The difference between these two models is the underlying solution algorithm, their input file definitions are kept largely the same. 
+
 \section{Setting up a Reactive Transport Process with ogs6}
 
 \subsection{Project File Setting (*.PRO)}
