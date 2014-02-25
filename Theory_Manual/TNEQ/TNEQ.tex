@@ -127,46 +127,82 @@ The assembled discrete system of equations reads
 \end{align}
 
 System matrices:
-
+\allowdisplaybreaks%allows to break within align environment
 \begin{multicols}{2}
 {\small{
 \begin{flalign}
-	\mbf{M}_{pp} &= \int \limits_\Omega \mbf{G}_L^T \phi_G \rho_{GR} \beta_p \mbf{G}_L \mathd \Omega&\\
-	\mbf{M}_{pT} &= \int \limits_\Omega \mbf{G}_L^T (- \phi_G \rho_{GR} \alpha_T) \mbf{G}_L \mathd \Omega&\\
-	\mbf{M}_{px} &= \int \limits_\Omega \mbf{G}_L^T \frac{\phi_G \partial \rho_{GR}}{\partial x_{mV}} \mbf{G}_L \mathd \Omega&\\
-	\mbf{M}_{TT}^G &= \int \limits_\Omega \mbf{G}_L^T \phi_G \rho_{GR} c_{pG} \mbf{G}_L \mathd \Omega&\\
-	\mbf{M}_{Tp} &= \int \limits_\Omega \mbf{G}_L^T (-\phi_G T_G \alpha_T) \mbf{G}_L \mathd \Omega&\\
-	\mbf{M}_{TT}^S &= \int \limits_\Omega \mbf{G}_L^T (1-\phi_G) \rho_{SR} c_{pS} \mbf{G}_L \mathd \Omega&\\
-	\mbf{M}_{xx} &= \int \limits_\Omega \mbf{G}_L^T \phi_G \rho_{GR} \mbf{G}_L \mathd \Omega
+	\mbf{M}_{pp} &= \int \limits_\Omega \mbf{N}^T \phi_G \rho_{GR} \beta_p \mbf{N} \mathd \Omega&\\
+	\mbf{M}_{pT} &= \int \limits_\Omega \mbf{N}^T (- \phi_G \rho_{GR} \alpha_T) \mbf{N} \mathd \Omega&\\
+	\mbf{M}_{px} &= \int \limits_\Omega \mbf{N}^T \frac{\phi_G \partial \rho_{GR}}{\partial x_{mV}} \mbf{N} \mathd \Omega&\\
+	\mbf{M}_{TT}^G &= \int \limits_\Omega \mbf{N}^T \phi_G \rho_{GR} c_{pG} \mbf{N} \mathd \Omega&\\
+	\mbf{M}_{Tp} &= \int \limits_\Omega \mbf{N}^T (-\phi_G T_G \alpha_T) \mbf{N} \mathd \Omega&\\
+	\mbf{M}_{TT}^S &= \int \limits_\Omega \mbf{N}^T (1-\phi_G) \rho_{SR} c_{pS} \mbf{N} \mathd \Omega&\\
+	\mbf{M}_{xx} &= \int \limits_\Omega \mbf{N}^T \phi_G \rho_{GR} \mbf{N} \mathd \Omega
 \end{flalign}
 \begin{flalign}
-	\mbf{C}_{TT}^{GS} &= \vint{\mbf{G}_L^T (-h_{SG}) \mbf{G}_L}&\\
-	\mbf{C}_{TT}^G &= \vint{\mbf{G}_L^T h_{SG} \mbf{G}_L}&\\
-	\mbf{C}_{Tp} &= \vint{\mbf{G}^T_L (-\phi_G^{-1} \grad \phi_G \cdot \tilde{\mbf{w}}_G) \mbf{G}_L}&\\
-	\mbf{C}_{TT}^{SG} &= \int \limits_\Omega \mbf{G}_L^T (-h_{SG} - \hat{\rho}_S c_{pV}) \mbf{G}_L \mathd \Omega&\\
-	\mbf{C}_{TT}^S &= \vint{\mbf{G}_L^T [h_{SG} + \hat{\rho}_S c_{pV} ] \mbf{G}_L}&\\
-	\mbf{C}_{xx} &= \vint{\mbf{G}_L^T (-\hat{\rho}_S) \mbf{G}_L}
+	\mbf{C}_{TT}^{GS} &= \vint{\mbf{N}^T (-h_{SG}) \mbf{N}}&\\
+	\mbf{C}_{TT}^G &= \vint{\mbf{N}^T h_{SG} \mbf{N}}&\\
+	\mbf{C}_{Tp} &= \vint{\mbf{N}^T (-\phi_G^{-1} \grad \phi_G \cdot \tilde{\mbf{w}}_G) \mbf{N}}&\\
+	\mbf{C}_{TT}^{SG} &= \int \limits_\Omega \mbf{N}^T (-h_{SG} - \hat{\rho}_S c_{pV}) \mbf{N} \mathd \Omega&\\
+	\mbf{C}_{TT}^S &= \vint{\mbf{N}^T [h_{SG} + \hat{\rho}_S c_{pV} ] \mbf{N}}&\\
+	\mbf{C}_{xx} &= \vint{\mbf{N}^T (-\hat{\rho}_S) \mbf{N}}
 \end{flalign}
 \begin{flalign}
-	\mbf{L}_{pp} &= \int \limits_\Omega \nabla \mbf{G}_L^T \rho_{GR} \mbf{k} \nabla \mbf{G}_L \mathd \Omega&\\
-	\mbf{L}_{TT}^G &= \vint{\nabla \mbf{G}_L^T \phi_G \mbf{\lambda}_{GR} \nabla \mbf{G}_L}&\\
-	\mbf{L}_{TT}^S &= \vint{\nabla \mbf{G}_L^T (1-\phi_G) \mbf{\lambda}_S \nabla \mbf{G}_L}&\\
-	\mbf{L}_{xx} &= \vint{\nabla \mbf{G}^T_L \phi_G \rho_{GR} \mbf{D} \nabla \mbf{G}_L}
+	\mbf{L}_{pp} &= \int \limits_\Omega \nabla \mbf{N}^T \rho_{GR} \mbf{k} \nabla \mbf{N} \mathd \Omega&\\
+	\mbf{L}_{TT}^G &= \vint{\nabla \mbf{N}^T \phi_G \mbf{\lambda}_{GR} \nabla \mbf{N}}&\\
+	\mbf{L}_{TT}^S &= \vint{\nabla \mbf{N}^T (1-\phi_G) \mbf{\lambda}_S \nabla \mbf{N}}&\\
+	\mbf{L}_{xx} &= \vint{\nabla \mbf{N}^T \phi_G \rho_{GR} \mbf{D} \nabla \mbf{N}}
 \end{flalign}
 \begin{flalign}
-	\mbf{A}_{TT}^G &= \vint{\mbf{G}_L^T \rho_{GR} c_{pG} \tilde{\mbf{w}}_G \nabla \mbf{G}_L}&\\
-	\mbf{A}_{Tp}^G &= \vint{\mbf{G}_L^T (-\alpha_T T_G) \tilde{\mbf{w}}_G \nabla \mbf{G}_L}&\\
-	\mbf{A}_{xx} &= \vint{\mbf{G}_L^T \rho_{GR} \tilde{\mbf{w}}_G \nabla \mbf{G}_L}
+	\mbf{A}_{TT}^G &= \vint{\mbf{N}^T \rho_{GR} c_{pG} \tilde{\mbf{w}}_G \nabla \mbf{N}}&\\
+	\mbf{A}_{Tp}^G &= \vint{\mbf{N}^T (-\alpha_T T_G) \tilde{\mbf{w}}_G \nabla \mbf{N}}&\\
+	\mbf{A}_{xx} &= \vint{\mbf{N}^T \rho_{GR} \tilde{\mbf{w}}_G \nabla \mbf{N}}
 \end{flalign}
 \begin{flalign}
-	\widehat{\mbf{A}}_{pp} &= \int \limits_\Omega \nabla \mbf{G}_L^T \rho_{GR} \mbf{k} \phi_G^{-1} \left(1 - \frac{T_S}{T_G} \right) \grad{\phi_G} \mbf{G}_L \mathd \Omega&
+	\widehat{\mbf{A}}_{pp} &= \int \limits_\Omega \nabla \mbf{N}^T \rho_{GR} \mbf{k} \phi_G^{-1} \left(1 - \frac{T_S}{T_G} \right) \grad{\phi_G} \mbf{N} \mathd \Omega&
 \end{flalign}
 \begin{flalign}
-	\mbf{f}_p &= \int \limits_{\partial \Omega_w} \dot{m}_n \mbf{G}_L^T \mathd \Gamma - \int \limits_\Omega \hat{\rho}_S \mbf{G}_L^T \mathd \Omega - \vint{\nabla \mbf{G}_L^T \rho_{GR}^2 \mbf{k} \mbf{b}_G}&\\
-	\mbf{f}_T^G &= \int \limits_{\partial \Omega_{qG}} q_n^G \mbf{G}_L^T \mathd \Gamma&\\
-	\mbf{f}_T^S &= \int \limits_{\partial \Omega_{qS}} q_{nS} \mbf{G}_L^T \mathd \Gamma + \int \limits_\Omega \left[ \hat{\rho}_S \Delta h - \hat{\mbf{p}}_G \cdot \mbf{w}_G \right] \mbf{G}_L^T \mathd \Omega&\\
-	\mbf{f}_{x} &= \int \limits_\Omega (-\hat{\rho}_S) \mbf{G}_L^T \mathd \Omega + \int \limits_{\partial \Omega_d} d_n \mbf{G}_L^T \mathd \Gamma
+	\mbf{f}_p &= \int \limits_{\partial \Omega_w} \dot{m}_n \mbf{N}^T \mathd \Gamma - \int \limits_\Omega \hat{\rho}_S \mbf{N}^T \mathd \Omega - \vint{\nabla \mbf{N}^T \rho_{GR}^2 \mbf{k} \mbf{b}_G}&\\
+	\mbf{f}_T^G &= \int \limits_{\partial \Omega_{qG}} q_n^G \mbf{N}^T \mathd \Gamma&\\
+	\mbf{f}_T^S &= \int \limits_{\partial \Omega_{qS}} q_{nS} \mbf{N}^T \mathd \Gamma + \int \limits_\Omega \left[ \hat{\rho}_S \Delta h - \hat{\mbf{p}}_G \cdot \mbf{w}_G \right] \mbf{N}^T \mathd \Omega&\\
+	\mbf{f}_{x} &= \int \limits_\Omega (-\hat{\rho}_S) \mbf{N}^T \mathd \Omega + \int \limits_{\partial \Omega_d} d_n \mbf{N}^T \mathd \Gamma
 \end{flalign}
 }}
 \end{multicols}
+For this, a primary variable, e.g. $p$, has been approximated by the elemental shape functions $N^a$ and the nodal values $\hat{p}^a$ as follows:
+\begin{flalign}	
+	p &\approx \tilde{p} = \mbf{N} \hat{\mbf{p}} = \sum \limits_a^{n_n} N^a \hat{p}^a \mwith \hat{\mbf{p}} = [p^1\ p^2 \dots p^{n_n}]^T \mand \mbf{N} = [N^1\ N^2 \dots N^{n_n}]
+\end{flalign}
+for an element with $n_n$ nodes.
 
+Nodal coordinates are approximated as follows and required here for gradient evaluation:
+\begin{align}
+	\tilde{x}_i &= \sum \limits_{a=1}^{n_n} N^a \hat{x}^a_i
+\end{align}
+where $n_n$ is the number of nodes. We define the ordering
+\begin{align}
+	\tilde{\mbf{x}} &= [\tilde{x}_1\ \tilde{x}_2\ \tilde{x}_3]^T\\
+	\hat{\mbf{x}} &= [\hat{x}_1^1\ \hat{x}_1^2\ \dots\ \hat{x}_1^{n_n}\ \ \hat{x}_2^1\ \hat{x}_2^2\ \dots\ \hat{x}_2^{n_n}\ \ \hat{x}_3^1\ \hat{x}_3^2\ \dots\ \hat{x}_3^{n_n}]^T
+\end{align}
+Therefore, the matrix of shape functions reads:
+\beq
+	\mbf{N}^x = \left(
+		\begin{array}{ccc}
+			N^1\ N^2\ \dots\ N^{n_n} & \mbf{0}^T & \mbf{0}^T\\
+			\mbf{0}^T & N^1\ N^2\ \dots\ N^{n_n} & \mbf{0}^T\\
+			\mbf{0}^T & \mbf{0}^T & N^1\ N^2\ \dots\ N^{n_n}
+		\end{array}	
+	\right)
+\eeq
+which has dimensions $[n_\mathrm{DOF} \times n_\mathrm{DOF} n_n]$ so that we can write
+\begin{align}
+	\tilde{\mbf{x}} &= \mbf{N}^x \hat{\mbf{x}}
+\end{align}
+The gradient of a quantity can be written as
+\beq
+	\frac{\partial (\bullet)}{\partial x_i} = \frac{\partial (\bullet)}{\partial \xi_k} \frac{\partial \xi_k}{\partial x_i}
+\eeq
+where the Jacobi matrix $J_{ki}$ is defined through its inverse
+\beq
+	J^{-1}_{ik} = \frac{\partial x_i}{\partial \xi_k} = \sum \limits_{a=1}^{n_n} \frac{\partial {N^x}^a}{\partial \xi_k} \hat{x}^a_i
+\eeq
