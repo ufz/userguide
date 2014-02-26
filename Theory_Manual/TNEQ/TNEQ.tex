@@ -67,12 +67,12 @@ The gas energy balance reads
 The solid energy balance reads
 \begin{align}
 	&\int \limits_\Omega \left[ (1-\phi_{G}) \rho_{SR} c_{pS} \frac{\partial T_S}{\partial t} \delta T_S + (1-\phi_{G}) \mbf{\lambda}_S \grad T_S \cdot \grad \delta T_S - h_{SG} (T_G - T_S) \delta T_S - \right. \nn\\
-	&\qquad \left. + \hat{\mbf{p}}_G \cdot \mbf{w}_G \delta T_S - \hat{\rho}_S [\Delta h + c_{pV} (T_G - T_S)] \delta T_S \white \int \hspace{-3mm} \black \right] \mathd \Omega + \int \limits_{\partial \Omega_{qS}} \underbrace{\mbf{q}_S \cdot \mbf{n}}_{:=-q_{nS}} \delta T_S \mathd \Gamma= 0
+	&\qquad \left. + \hat{\mbf{p}}_G \cdot \mbf{w}_G \delta T_S - \hat{\rho}_S [\Delta h + c_{pV} (T_G - T_S)] \delta T_S \color{white} \int \hspace{-3mm} \color{black} \right] \mathd \Omega + \int \limits_{\partial \Omega_{qS}} \underbrace{\mbf{q}_S \cdot \mbf{n}}_{:=-q_{nS}} \delta T_S \mathd \Gamma= 0
 \end{align}
 The reactive component gas mass balance:
 \begin{align}
 	&\int \limits_\Omega \left[ \phi_G \rho_{GR} \frac{\partial x_{mR}}{\partial t} \delta x + \phi_G \rho_{GR} \mbf{v}_G \cdot \grad x_{mR} \delta x + \phi_G \rho_{GR} \mbf{D} \grad x_{mR} \cdot \grad \delta x + \right. \nn\\
-		&\qquad  \left. + (1 - x_{mR}) \hat{\rho}_S \delta x \white \frac{}{} \black \right] \mathd \Omega = \int \limits_{\partial \Omega_{d}} \underbrace{\phi_G \rho_{GR}  \mbf{D} \grad x_{mR} \cdot \mbf{n}}_{:=d_n} \delta x \mathd \Gamma
+		&\qquad  \left. + (1 - x_{mR}) \hat{\rho}_S \delta x \color{white} \frac{}{} \color{black} \right] \mathd \Omega = \int \limits_{\partial \Omega_{d}} \underbrace{\phi_G \rho_{GR}  \mbf{D} \grad x_{mR} \cdot \mbf{n}}_{:=d_n} \delta x \mathd \Gamma
 \end{align}
 
 \subsection{Linearised Weak forms}
