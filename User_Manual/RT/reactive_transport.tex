@@ -18,9 +18,9 @@ L_i(c_i) := - \nabla \cdot ( \mathbf{D} \nabla c_i - \mathbf{q} c_i) .
 \end{equation}
 In ogs6, we calculate the tensor $\mathbf{D}$ according to the Scheidegger formulation \cite{Scheidegger1961}
 \begin{equation}
-\mathbf{D} = -(\theta d_{diffusion, i} + \beta_t \left| \mathbf{q} \right|) \mathbf{I} + (\beta_l - \beta_t) \frac{\mathbf{q} \mathbf{q}^T}{\left| \mathbf{q} \right| }~~, 
+\mathbf{D} = -(\theta d_{i} + \beta_t \left| \mathbf{q} \right|) \mathbf{I} + (\beta_l - \beta_t) \frac{\mathbf{q} \mathbf{q}^T}{\left| \mathbf{q} \right| }~~, 
 \end{equation}
-where the $d_{diffusion, i}$ is the diffusion coefficient of i-th component, and $\beta_l$ and $\beta_t$ are the longitudinal and transverse dispersion coefficients. 
+where $d_i$ is the diffusion coefficient of $i$-th component, and $\beta_l$ and $\beta_t$ are the longitudinal and transverse dispersion coefficients. 
 
 \subsection{Available User Modules to simulate Reactive Transport Processes}
 
@@ -38,13 +38,14 @@ $\mathrm{REACT\_GIA}$            & Equilibrium and Kinetic Reactions     & Globa
 \end{tabular}
 \end{table}
 
-Currently, there are three user modules implemented in ogs6 for the reactive transport simulations. Their names, underlying numerical algorithm, and applicable reaction types are summarized in Table ~\ref{RT_tab_rt_modules}. The difference between these two models is the underlying solution algorithm. For the operator splitting method, the left hand side of Equation \ref{eqn:RT_react_trans} is first solved. Then the concentration vectors on each finite element node are passed on to a chemical solver, the chemistry system on the right hand side is solved on one node after the other. For the global implicit method, the non-linear governing equations \ref{eqn:RT_react_trans} is solved in a monolithic way. The input files format for these two user modules are kept largely the same. 
+Currently, there are three user modules implemented in ogs6 to perform reactive transport simulations. Their names, underlying numerical algorithm, and applicable reaction types are summarized in Table ~\ref{RT_tab_rt_modules}. The differences between these three modules are mainly the underlying solution algorithm. For the operator splitting method, the left hand side of Equation \ref{eqn:RT_react_trans} is first solved. Afterwards, the concentration vectors on each finite element node are passed on to a chemical solver, then the chemistry system on the right hand side is calculated one node after the other. For the global implicit method, the non-linear governing equations \ref{eqn:RT_react_trans} is solved in a monolithic way. Although quiet distinct numerical procedures are involved, the input files format for these three user modules are kept largely the same. 
 
-The ogs5 users might know, that ogs5 adopted the operator splitting scheme to simulate reactive transport processes. Also, several different chemical solvers, like PhreeqC (CITATION), GEM (CITATION), and ChemApp (CITATION) have been integrated to run the nodal-based local chemistry systems. There are currently plans to re-implement these features into ogs6. Thus, the reactive transport user modules will be extended in the future. 
+The ogs5 users might know, that ogs5 adopted the operator splitting scheme to simulate reactive transport processes. Also, several different chemical solvers, like PhreeqC \cite{Xie2006}, GEM \cite{Shao2009}, and ChemApp \cite{Graupner2011} have been integrated to run the nodal-based local chemistry systems. There are currently plans to re-implement these features into ogs6. Thus, the available reactive transport modules will be further extended in the future. Here in this document, we focus on the two user modules $\mathrm{REACT\_TRANS\_OPS}$ \index{REACT\_TRANS\_OPS} and $\mathrm{REACT\_GIA}$\index{REACT\_GIA}. Since the $\mathrm{REACT\_GIA}$ module can also handle kinetic controlled reactions, we recommend the user to use the more general module $\mathrm{REACT\_GIA}$ instead of $\mathrm{REACT\_GIA\_KIN}$. 
 
-Here in this document, we focus on the two user modules $\mathrm{REACT\_TRANS\_OPS}$ \index{REACT\_TRANS\_OPS} and $\mathrm{REACT\_GIA}$\index{REACT\_GIA}, since the $\mathrm{REACT\_GIA}$ module can also handle kinetic controlled reactions as well. 
+This chapter is organized in the following sequence. In section \ref{sec:tutorial}, the procedure to set up an reactive transport simulation will be introduced step by step, using the Calcite benchmark case as an example. Section \ref{sec:common_error} will discuss some widely encountered errors and how to avoid them. Section \ref{sec:benchmarks} will show several benchmark cases, where supplementary information for special reaction types will be given. 
 
 \section{Setting up a Reactive Transport Process with ogs6}
+\label{sec:tutorial}
 
 \subsection{Project File Setting (*.PRO)}
 
@@ -272,7 +273,7 @@ Before the simulation starts running, the user has to define in the *.OUT file, 
 Running the simulation using ogs6 is a little bit different than ogs5. Originally, the user can double click ogs.exe file, and enter the path to the input files. For the new ogs6, we have to provide the path to input files, after a ''-i'' argument. So if typing it in the command line interface or call the ogs6 simulation inside a batch file, the command looks like Figure \ref{fig:RT_fig_bat_file}. Assuming the executable file ogs6.exe is residing in the same folder as the input files, the ''-i'' argument indicates that we are proving the input files pass. The string ''pds'' is the common name before different input file types. The ''$>$'' symbol tells the program that we would like to record all screen output in the result.txt file. 
 
 \section{Common Errors and Pitfalls}
-
+\label{sec:common_error}
 There are some very often encountered errors when using the ogs6 simulator. As developers, we are trying our best to prevent the user from entering unrealistic input information, which will drive the simulator into unproductive work. If the simulation is not working properly as you expected, the first thing the user shall look is the log file. That is why, we strongly recommend to store all screen output in an ASCII file like the result.txt. Now let’s have a look at several typical error messages that might appear in the log file, and analyze their reasons. 
 
 \subsection{Missing Chemical Components}
@@ -286,7 +287,7 @@ There are some very often encountered errors when using the ogs6 simulator. As d
 
 
 \section{Benchmarks Examples of Reactive Transport Processes}
-
+\label{sec:benchmarks}
 \subsection{Decay1D with one kinetic reaction}
 
 \subsection{Neckar1D with three kinetic reactions}
