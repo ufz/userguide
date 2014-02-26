@@ -6,13 +6,21 @@ In the field of environmental and geosciences, the chemical components are often
 
 \subsection{Governing Equations}
 
-Let $\mathbf{c}$ and $\mathbf{\overline{c}}$ be the concentration vectors of all mobile and immobile chemical components, and $f_{i}(\mathbf{c}, \mathbf{\overline{c}})$ represents the rate of consumption or production induced by the chemical reactions, the governing equations of reactive transport process can be written as, 
-
+The governing equations of a reactive transport process are typically composed of two parts. Assuming fully saturated porous media with a porosity of $\theta$, let $\mathbf{c}$ and $\mathbf{\overline{c}}$ be the concentration vectors of all mobile and immobile chemical components, the mass balance of chemical components is controlled by the transport operator $\bf{L}$, and $f_{i}(\mathbf{c}, \mathbf{\overline{c}})$ the rate of consumption or production induced by the corresponding chemical reactions, 
 \begin{eqnarray}
 \label{eqn:RT_react_trans}
-\partial_{t} ( \theta \mathbf{c} ) + \bf{L} \mathbf{c} &=&  f_{i}(\mathbf{c}, \mathbf{\overline{c}}) \nonumber \\ 
+\partial_{t} ( \theta \mathbf{c} ) + L (\mathbf{c}) &=&  f_{i}(\mathbf{c}, \mathbf{\overline{c}}) \nonumber \\ 
 \partial_{t} ( \theta \mathbf{\overline{c}} ) &=&  f_{i}(\mathbf{c}, \mathbf{\overline{c}}). 
 \end{eqnarray}
+The transport operator $L_i(\mathbf{c_i})$ for a particular component $i$ is formulated by the classical advection-diffusion equation, where the transport of the chemical components are controlled by the Darcy velocity $\mathbf{q}$ and the diffusion/dispersion tensor $\mathbf{D}$.  
+\begin{equation}
+L_i(c_i) := - \nabla \cdot ( \mathbf{D} \nabla c_i - \mathbf{q} c_i) . 
+\end{equation}
+In ogs6, we calculate the tensor $\mathbf{D}$ according to the Scheidegger formulation \cite{Scheidegger1961}
+\begin{equation}
+\mathbf{D} = -(\theta d_{diffusion, i} + \beta_t \left| \mathbf{q} \right|) \mathbf{I} + (\beta_l - \beta_t) \frac{\mathbf{q} \mathbf{q}^T}{\left| \mathbf{q} \right| }~~, 
+\end{equation}
+where the $d_{diffusion, i}$ is the diffusion coefficient of i-th component, and $\beta_l$ and $\beta_t$ are the longitudinal and transverse dispersion coefficients. 
 
 \subsection{Available User Modules to simulate Reactive Transport Processes}
 
