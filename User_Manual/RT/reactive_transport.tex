@@ -288,7 +288,34 @@ There are some very often encountered errors when using the ogs6 simulator. As d
 \label{sec:benchmarks}
 \subsection{Decay1D with one kinetic reaction}
 
+TODO: figure of the domain. 
+
+The Decay1D example was originally presented in the OpenGeoSys Benchmark book \cite{DBB2012}, where it was introduced to test the mass transport in a one-dimensional domain, with first order decay going on at the same time. Similar as the Eq. \ref{eqn:RT_react_trans}, the governing equation of this process can be written as
+\begin{equation}
+\frac{\partial C}{\partial t} + q \cdot \nabla C - D \nabla \cdot \left( \nabla C \right) = - \lambda \cdot C , 
+\end{equation}
+with $\lambda$ the first order decay coefficient. We take this same benchmark case, but simulate it as a reactive transport process. The geometry, mesh, Darcy flow velocity, decay coefficient and time stepping schemes were kept exactly the same as the mass transport process. One kinetic reaction, defined in the KRC file, has been included to reflect the first order decay. 
+$$
+Decay\_Father \rightarrow Decay\_Daughter
+$$
+The rate of this reaction was given using the user defined expression. Figure \ref{fig:RT_fig_decay1d_results} shows the simulation results by the $REACT\_GIA$ and $REACT\_TRANS\_OPS$ modules. We also plotted the analytic solution in the figure for comparison. It can be found that the results fit with each other. On the performance side, the ogs6 in $REACT\_TRANS\_OPS$ mode is considerably faster than ogs5, even though the ogs5 code is merely running mass transport simulations. If the user would prefer accuracy over speed, the $REACT\_GIA$ code can also be chosen. 
+
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{RT/figs/RT_fig_decay1d_results}
+\caption{Results of the benchmark Decay1D. Comparison of simulated profile from $REACT\_GIA$, $REACT\_TRANS\_OPS$, and analytic solutions. }
+\label{fig:RT_fig_decay1d_results}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{RT/figs/RT_fig_decay1d_performance}
+\caption{Comparison of simulation time needed by different OGS modules to run the Decay1D benchmark. }
+\label{fig:RT_fig_decay1d_performance}
+\end{figure}
+
 \subsection{Neckar1D with three kinetic reactions}
+
+
+
 
 \subsection{Monod2D with kinetic reactions}
 
