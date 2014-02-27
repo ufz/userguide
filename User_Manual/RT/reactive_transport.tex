@@ -40,7 +40,7 @@ $\mathrm{REACT\_GIA}$            & Equilibrium and Kinetic Reactions     & Globa
 
 Currently, there are three user modules implemented in ogs6 to perform reactive transport simulations. Their names, underlying numerical algorithm, and applicable reaction types are summarized in Table ~\ref{RT_tab_rt_modules}. The differences between these three modules are mainly the underlying solution algorithm. For the operator splitting method, the left hand side of Equation \ref{eqn:RT_react_trans} is first solved. Afterwards, the concentration vectors on each finite element node are passed on to a chemical solver, then the chemistry system on the right hand side is calculated one node after the other. For the global implicit method, the non-linear governing equations \ref{eqn:RT_react_trans} is solved in a monolithic way. Although quiet distinct numerical procedures are involved, the input files format for these three user modules are kept largely the same. 
 
-The ogs5 users might know, that ogs5 adopted the operator splitting scheme to simulate reactive transport processes. Also, several different chemical solvers, like PhreeqC \cite{Xie2006}, GEM \cite{Shao2009}, and ChemApp \cite{Graupner2011} have been integrated to run the nodal-based local chemistry systems. There are currently plans to re-implement these features into ogs6. Thus, the available reactive transport modules will be further extended in the future. Here in this document, we focus on the two user modules $\mathrm{REACT\_TRANS\_OPS}$ \index{REACT\_TRANS\_OPS} and $\mathrm{REACT\_GIA}$\index{REACT\_GIA}. Since the $\mathrm{REACT\_GIA}$ module can also handle kinetic controlled reactions, we recommend the user to use the more general module $\mathrm{REACT\_GIA}$ instead of $\mathrm{REACT\_GIA\_KIN}$. 
+The ogs5 users might know, that ogs5 adopted the operator splitting scheme to simulate reactive transport processes. Also, several different chemical solvers, like PhreeqC \cite{Xie2006}, GEM \cite{Shao2009}, and ChemApp \cite{Graupner2011} have been integrated to run the nodal-based local chemistry systems. There are currently plans to re-implement these features into ogs6. Thus, the available reactive transport modules will be further extended in the future. Here in this document, we focus on the two user modules \kw{}{REACT\_TRANS\_OPS} and \kw{}{REACT\_GIA}. Since the \kw{}{REACT\_GIA} module can also handle kinetic controlled reactions, we recommend the user to use the more general module \kw{}{REACT\_GIA} instead of \kw{}{REACT\_GIA\_KIN}. 
 
 The software OpenGeoSys has been developed as an open source project and can be freely obtained. Interested users may visit the website of OGS (www.opengeosys.org), to learn more about the OpenGeoSys community, or check out author’s repository (\url{https://github.com/HaibingShao/ogs}) to get more information specifically for reactive transport topics. The software itself, this tutorial, and the attaching benchmark files are published under the Creative Commons Attribution-NoDerivs 3.0 Unported License. Please visit \url{http://www.opengeosys.org/project/license} for details regarding the licensing agreement. 
 
@@ -80,7 +80,7 @@ As demonstrated in Fig. 2.2, MCP file is used to define the chemical components 
 
 \subsubsection{Charge of Chemical Components}
 
-The new features introduced in ogs6 are the last two key words, the $\$CHARGE$ \index{\$CHARGE}, and $\$COMP\_TYPE$. The $\$CHARGE$ key word will define how many equivalents of charge this chemical component is carrying with it. It is a double number, using the $+$ or $-$ sign to indicate the positive or negative charge. This key word is introduced, mainly because the charge information is needed to calculated the ionic strength of the solution, which is later needed to calculate the activity coefficients . If no $\$CHARGE$ key word is defined in the MCP file, then the charge of corresponding component will be set to zero by default. 
+The new features introduced in ogs6 are the last two key words, the \kw{\$}{CHARGE}, and \kw{\$}{COMP\_TYPE}. The \kw{\$}{CHARGE} key word will define how many equivalents of charge this chemical component is carrying with it. It is a double number, using the $+$ or $-$ sign to indicate the positive or negative charge. This key word is introduced, mainly because the charge information is needed to calculated the ionic strength of the solution, which is later needed to calculate the activity coefficients . If no \kw{\$}{CHARGE} key word is defined in the MCP file, then the charge of corresponding component will be set to zero by default. 
 
 \subsubsection{Types of Chemical Components}
 
@@ -89,27 +89,27 @@ The new features introduced in ogs6 are the last two key words, the $\$CHARGE$ \
 \caption{Available types of chemical components and their meaning.}
 \begin{tabular}{c p{5.5cm}}
 \hline
-$\$COMP\_TYPE$    & Meaning  \\
+\kw{\$}{COMP\_TYPE}    & Meaning  \\
 \hline
-$BASIS\_COMP$       & Basis of the chemical reaction system (ref. section number) \\
-$AQ\_PHASE\_COMP$    & Freely mobile component dissolved in the aqueous phase \\
-$GAS\_PHASE\_COMP$   & Freely mobile component in the gas phase. \\
-$MIN\_PHASE\_COMP$   & Single phase mineral component, its amount controlled by equilibrium mineral reactions.  \\
-$SORPTION\_COMP$    & Sorption component that defined by a sorption reaction.  \\ 
-$SS\_PHASE\_COMP$    & Solid Solution phase component (not yet fully supported) \\ 
-$KIN\_COMP$         & Component, its amount solely controlled by kinetic reaction. \\
+\kw{}{BASIS\_COMP}       & Basis of the chemical reaction system (ref. section number) \\
+\kw{}{AQ\_PHASE\_COMP}    & Freely mobile component dissolved in the aqueous phase \\
+\kw{}{GAS\_PHASE\_COMP}   & Freely mobile component in the gas phase. \\
+\kw{}{MIN\_PHASE\_COMP}  & Single phase mineral component, its amount controlled by equilibrium mineral reactions.  \\
+\kw{}{SORPTION\_COMP}    & Sorption component that defined by a sorption reaction.  \\ 
+\kw{}{SS\_PHASE\_COMP}    & Solid Solution phase component (not yet fully supported) \\ 
+\kw{}{KIN\_COMP}         & Component, its amount solely controlled by kinetic reaction. \\
 \hline
 \end{tabular}
 \end{table}
 
-The $\$COMP\_TYPE$ \index{\$COMP\_TYPE}key word defines which type this chemical component belongs to. For different types of chemical components, like aqueous phase components and mineral components, they are differently treated during the numerical simulation (ref. section number). It is very important to know this information, as some numerical scheme like $GIA\_REDUCT$ depends on it to make pre-and post-processing of the simulation. Currently, we have seven types built in OGS6, their names and differences are listed in Table \ref{tab:RT_tab_mcp_types}. 
+The \kw{\$}{COMP\_TYPE} key word defines which type this chemical component belongs to. For different types of chemical components, like aqueous phase components and mineral components, they are differently treated during the numerical simulation (ref. section number). It is very important to know this information, as some numerical scheme like \kw{}{GIA\_REDUCT} depends on it to make pre-and post-processing of the simulation. Currently, we have seven types built in OGS6, their names and differences are listed in Table \ref{tab:RT_tab_mcp_types}. 
 
-The $\$KIN\_COMP$ type of component is quiet special. Actually, a mineral component can be defined as $\$KIN\_COMP$ type. Whether to define a mineral component to $\$MIN\_PHASE\_COMP$ or $\$KIN\_COMP$ depends on which type of reaction is controlling the amount of this mineral component. The former choice is exclusively attached to equilibrium mineral reaction, in which the present mineral is treated with activity of one. While the latter type is used only if this mineral is controlled by a kinetic rate expression. The reason of making this differentiation lies on the two separate numerical algorithms applied to simulate these two types of reactions. Interested readers please refer to section aa.bb for more details. For readers who would like to further work on the OGS development, please have a look into the source code: $\slash ogs6THMC \slash ChemLib \slash chemconst.h$.  One can find all types of components defined under the enum structure $Comp\_Type$. 
+The \kw{\$}{KIN\_COMP} type of component is quiet special. Actually, a mineral component can be defined as \kw{\$}{KIN\_COMP} type. Whether to define a mineral component to \kw{\$}{MIN\_PHASE\_COMP} or \kw{\$}{KIN\_COMP} depends on which type of reaction is controlling the amount of this mineral component. The former choice is exclusively attached to equilibrium mineral reaction, in which the present mineral is treated with activity of one. While the latter type is used only if this mineral is controlled by a kinetic rate expression. The reason of making this differentiation lies on the two separate numerical algorithms applied to simulate these two types of reactions. Interested readers please refer to section aa.bb for more details. For readers who would like to further work on the OGS development, please have a look into the source code: $\slash ogs6THMC \slash ChemLib \slash chemconst.h$.  One can find all types of components defined under the enum structure $Comp\_Type$. 
 
 
 \subsection{Defining chemical Reactions (*.KRC)}
 
-Once all the chemical components are ready in the MCP file, it is natural that the user would like to build their chemistry system by defining relevant reactions. We have adopted the old input file *.KRC file, which was used for kinetic reactions, and extended this file to accommodate both equilibrium and kinetic reactions. The advantage of this arrangement is that, old OGS5 input files can be easily supported by the new OGS6. However, we have to admit that it is a bit confusing when you see a equilibrium reaction defined under the same old key word $\#KIN\_REACT$. Figure 2.3 gives an illustration of how does the *.krc files looks like in the calcite example, which only contains equilibrium reactions. 
+Once all the chemical components are ready in the MCP file, it is natural that the user would like to build their chemistry system by defining relevant reactions. We have adopted the old input file *.KRC file, which was used for kinetic reactions, and extended this file to accommodate both equilibrium and kinetic reactions. The advantage of this arrangement is that, old OGS5 input files can be easily supported by the new OGS6. However, we have to admit that it is a bit confusing when you see a equilibrium reaction defined under the same old key word \kw{\#}{KIN\_REACT}. Figure 2.3 gives an illustration of how does the *.krc files looks like in the calcite example, which only contains equilibrium reactions. 
 
 \begin{figure}
 \includegraphics[width=0.5\textwidth]{RT/figs/RT_fig_krc_file}
@@ -119,13 +119,13 @@ Once all the chemical components are ready in the MCP file, it is natural that t
 
 \subsubsection{Equilibrium Reaction Definition}
 
-As demonstrated in Fig \ref{fig:RT_krc_file}, the definition of an equilibrium reactions starts with the key word $\#REACTION$, and followed by key words like $\$NAME$, $\$TYPE$, $\$EQUATION$, and $\$EQ_CONSTANT$.  The name of the reaction in ogs6 does not have really influence on the simulation. It is merely adopted to differentiate different reactions. 
+As demonstrated in Fig \ref{fig:RT_krc_file}, the definition of an equilibrium reactions starts with the key word \kw{\#}{REACTION}, and followed by key words like \kw{\$}{NAME}, \kw{\$}{TYPE}, \kw{\$}{EQUATION}, and \kw{\$}{EQ\_CONSTANT}.  The name of the reaction in ogs6 does not have really influence on the simulation. It is merely adopted to differentiate different reactions. 
 
-Currently, we have supported three types of equilibrium reactions, i.e. $MOB\_EQ\_REACT$, $SORP\_EQ\_REACT$, and $MIN\_EQ\_REACT$. From their names, it is easy to understand that for the $MOB\_EQ\_REACT$, all participating chemical components are mobile components dissolved in the aqueous phase. If this reaction is defining a sorption component or a single phase mineral component, then we use the corresponding key words respectively. 
+Currently, we have supported three types of equilibrium reactions, i.e. \kw{}{MOB\_EQ\_REACT}, \kw{}{SORP\_EQ\_REACT}, and \kw{}{MIN\_EQ\_REACT}. From their names, it is easy to understand that for the \kw{}{MOB\_EQ\_REACT}, all participating chemical components are mobile components dissolved in the aqueous phase. If this reaction is defining a sorption component or a single phase mineral component, then we use the corresponding key words respectively. 
 
-One important issue to notice is the order of reactions. Conventionally, we start with the $MOB\_EQ\_REACT$, then the $SORP\_EQ\_REACT$ type, followed by the , and finished with the kinetic types of reactions. Well, in the future, there are already plans to automatically sort out these reactions during the pre-processing phase of the simulation. 
+One important issue to notice is the order of reactions. Conventionally, we start with the \kw{}{MOB\_EQ\_REACT}, then the \kw{}{SORP\_EQ\_REACT} type, followed by the , and finished with the kinetic types of reactions. Well, in the future, there are already plans to automatically sort out these reactions during the pre-processing phase of the simulation. 
 
-Under the key word \$EQUATION, the chemical reaction formula is given. As demonstrated in Figure \ref{fig:RT_krc_file}, for a chemical reaction 
+Under the key word \kw{\$}{EQUATION}, the chemical reaction formula is given. As demonstrated in Figure \ref{fig:RT_krc_file}, for a chemical reaction 
 $$ H^{+} + CO_3^{2-} \leftrightarrow HCO_3^{-} . $$
 We write under the \$EQUATION key word the following text, 
 $$ 1 ~ H+ ~ + ~ 1 ~ CO32- ~ = ~ 1 ~ HCO3- ~ . $$
@@ -133,11 +133,11 @@ Notice that, the strings ''H+'', ''CO32-'', and ''HCO3-'' are exactly the same a
 $$ 0.5 ~ H+ ~ + ~ 0.5 ~ CO32- ~ = ~ 0.5 ~ HCO3- ~ , $$
 although the corresponding equilibrium constant of the reaction must be changed accordingly. 
 
-Another thing to be careful is the order of components. For a $MOB_EQ_REACT$, writing it with HCO3- as the reactant or the product does not change the reaction system, as far as the equilibrium constant is adjusted accordingly. However, defining a $MIN_EQ_REACT$ does require the mineral component to be written on the product side. For example, for the definition of calcite mineral precipitation and dissolution, we write the equation as, 
+Another thing to be careful is the order of components. For a \kw{}{MOB\_EQ\_REACT}, writing it with HCO3- as the reactant or the product does not change the reaction system, as far as the equilibrium constant is adjusted accordingly. However, defining a \kw{}{MIN\_EQ\_REACT} does require the mineral component to be written on the product side. For example, for the definition of calcite mineral precipitation and dissolution, we write the equation as, 
 $$ 1 ~ CO32- ~ + ~ 1 ~ Ca2+ ~ = ~ 1 ~ Calcite; $$
 The reason of this requirement is due to the complementary algorithm we have adopted in the code to handle mineral reactions. Interested readers please refer to section AA.BB for more detailed explanation. 
 ~\
-To close the definition, the user needs to give out the equilibrium constant of the reaction, under the key word $\$EQ\_CONSTANT$.  Notice that in most of the thermodynamic databases, the equilibrium constant of a reaction is often given as in the log10 scale. The user needs to do a conversion of such values to linear scale. We have also provided another key word, $\$EQ\_CONSTANT\_LOG10$, under which the log10 scaled values can be directly used. 
+To close the definition, the user needs to give out the equilibrium constant of the reaction, under the key word \kw{\$}{EQ\_CONSTANT}.  Notice that in most of the thermodynamic databases, the equilibrium constant of a reaction is often given as in the log10 scale. The user needs to do a conversion of such values to linear scale. We have also provided another key word, \kw{\$}{EQ\_CONSTANT\_LOG10}, under which the log10 scaled values can be directly used. 
 
 \subsubsection{Kinetic Reaction Definition}
 
@@ -147,7 +147,7 @@ To close the definition, the user needs to give out the equilibrium constant of 
 \label{fig:RT_fig_monod_eq}
 \end{figure}
 
-The definition of a kinetic reaction is very similar as the equilibrium one. The definition also starts with the key word $\#REACTION$, followed by the name, type and equation of the reaction. So far there are only two types of kinetic reactions supported, i.e. the monod type and the user defined type $USER\_EXP$. 
+The definition of a kinetic reaction is very similar as the equilibrium one. The definition also starts with the key word \kw{\#}{REACTION}, followed by the name, type and equation of the reaction. So far there are only two types of kinetic reactions supported, i.e. the monod type and the user defined type \kw{}{USER\_EXP}. 
 
 In the application field of biochemical reaction, the monod type of kinetic reactions are often used. Such kind of reactions has a common rate expression as follows, 
 \begin{equation}
@@ -170,17 +170,17 @@ The user could actually write this expression in the KRC file.  Figure \ref{fig:
 \label{fig:RT_fig_user_exp}
 \end{figure}
 
-To use this feature, one need to first define the type of this kinetic reaction as $USER\_EXP$. Then under the key word $\$USER\_EXPRESSION$, the rate of the reaction can be formulated using the numerical number, mathematical operators (such as $+$, $-$, $*$, and $/$), logical operators, and brackets. In order to refer to the concentration of chemical component, the user needs to add a character ''m'' before the name of the chemical component. During the simulation, ogs6 will automatically obtain the mole concentrations (in the unit of mol$\slash$kg water) of corresponding component at particular node and apply them in user defined expression to calculate the rate values. 
+To use this feature, one need to first define the type of this kinetic reaction as \kw{}{USER\_EXP}. Then under the key word \kw{\$}{USER\_EXPRESSION}, the rate of the reaction can be formulated using the numerical number, mathematical operators (such as $+$, $-$, $*$, and $/$), logical operators, and brackets. In order to refer to the concentration of chemical component, the user needs to add a character ''m'' before the name of the chemical component. During the simulation, ogs6 will automatically obtain the mole concentrations (in the unit of mol$\slash$kg water) of corresponding component at particular node and apply them in user defined expression to calculate the rate values. 
 
 This nice feature is achieved by the support of a external library called muParser \index{muParser}(\url{http://muparser.beltoforion.de}). The library is also an open-source project. Therefore we have included its source code directly into the ogs6. By the time when the kinetic reactions are initialized, we will also initialize the muParser library and defined the corresponding variables in the expression, such as the mole concentration of the chemical component. During the simulation, the evaluation function from the muParser library is called to give the rate values dynamically. The supported numerical and logically operations are actually defined by the muParser library. Interested readers are referred to their website for more details. 
 
-When using the user defined rate expressions, one need to bear in mind that numerical operators like ''+'' and ''-'' can no longer be used as part of the chemical component name. For example, defining sulfate as ''SO42-'' is generally ok. But when the string ''mSO42-'' is referring to the concentration of sulfate in the rate expression, the muParser library is very likely to interpret the symbol as the subtraction operation, thus creating troubles. Our suggestion is, to avoid any operator symbols used as part of the component name. One may write ''SO42-'' and ''H+'' as ''SO4nn'' and ''Hp'', with the ''p'' and the ''n'' representing the positive and negative charge. Notice that we still have to give the charge as a numerical value under the $\$CHARGE$ key word (see section 2.4.2). 
+When using the user defined rate expressions, one need to bear in mind that numerical operators like ''+'' and ''-'' can no longer be used as part of the chemical component name. For example, defining sulfate as ''SO42-'' is generally ok. But when the string ''mSO42-'' is referring to the concentration of sulfate in the rate expression, the muParser library is very likely to interpret the symbol as the subtraction operation, thus creating troubles. Our suggestion is, to avoid any operator symbols used as part of the component name. One may write ''SO42-'' and ''H+'' as ''SO4nn'' and ''Hp'', with the ''p'' and the ''n'' representing the positive and negative charge. Notice that we still have to give the charge as a numerical value under the \kw{\$}{CHARGE} key word (see section 2.4.2). 
 
 The users need to keep in mind that, the evaluation of user defined rate expression is relatively slow compared to the built-in rate functions like monod. Therefore, when the rate expression is widely used, we recommend to implement it into the code and using it as a built-in function. 
 
 \subsubsection{Activity Models}
 
-In the OGS 6 code, we have provided support for the activity models. So far, the Debye-H\"uckel and Davies activity models (CITATION) have been implemented in OGS6. In the *.KRC file under the key word $\#KINREACTIONDATA$ and $\$ACTIVITY\_MODEL$, users will give an integer number to specify the activity model to be applied through the simulation (see Fig. \ref{fig:RT_krc_file}). Here ''0'' means activity coefficients are all set to unity. ''1'' refers to the Debye-H\"uckel model, and ''2'' stands for Davies model. If the key word $\$ACTIVITY\_MODEL$ is not given, then no activity model will be applied, this is then equivalent to the ''0'' case. 
+In the OGS 6 code, we have provided support for the activity models. So far, the Debye-H\"uckel and Davies activity models (CITATION) have been implemented in OGS6. In the *.KRC file under the key word \kw{\#}{KINREACTIONDATA} and \kw{}{\$}{ACTIVITY\_MODEL}, users will give an integer number to specify the activity model to be applied through the simulation (see Fig. \ref{fig:RT_krc_file}). Here ''0'' means activity coefficients are all set to unity. ''1'' refers to the Debye-H\"uckel model, and ''2'' stands for Davies model. If the key word \kw{\$}{ACTIVITY\_MODEL} is not given, then no activity model will be applied, this is then equivalent to the ''0'' case. 
 
 \begin{figure}
 \includegraphics[width=0.6\textwidth]{RT/figs/RT_fig_ic_file}
@@ -192,13 +192,13 @@ In the OGS 6 code, we have provided support for the activity models. So far, the
 
 To construct a numerical model, initial and boundary conditions have to be specified by the user. Same as in OGS5, we write them in the *.IC, *.BC, and *.ST files. 
 
-As in the reactive transport User Module, the primary variables are the concentrations of chemical components. Therefore, we define initial concentrations accordingly. Different components are specified under separate $\#INITIAL\_CONDITION$ key word. Fig. \ref{fig:RT_fig_ic_file} gives an illustration. Setting boundary conditions is very similar as setting initial conditions, except the key word $\#BOUNDARY\_CONDITION$ is used. 
+As in the reactive transport User Module, the primary variables are the concentrations of chemical components. Therefore, we define initial concentrations accordingly. Different components are specified under separate \kw{\#}{INITIAL\_CONDITION} key word. Fig. \ref{fig:RT_fig_ic_file} gives an illustration. Setting boundary conditions is very similar as setting initial conditions, except the key word \kw{\#}{BOUNDARY\_CONDITION} is used. 
 
 \subsection{Time Stepping Settings}
 
 \subsubsection{Fixed Time Stepping Scheme}
 
-The fixed time stepping scheme is the most widely used time stepping setting. The user will need to specify the staring time, ending time, how many steps, and the size of each time step. Figure 2.7 demonstrate the format of *.TIM input files. In ogs6, the user will need to tell which UserModule the current time stepping scheme is applied to. Under the key word $\$TIME\_STEPS$, the first number denotes the number of steps, and the second number is the size of each time step in the unit of seconds. The staring time and ending time of the simulation is specified under the key words $\$TIME\_START$ and $\$TIME\_END$. 
+The fixed time stepping scheme is the most widely used time stepping setting. The user will need to specify the staring time, ending time, how many steps, and the size of each time step. Figure 2.7 demonstrate the format of *.TIM input files. In ogs6, the user will need to tell which UserModule the current time stepping scheme is applied to. Under the key word \kw{\$}{TIME\_STEPS}, the first number denotes the number of steps, and the second number is the size of each time step in the unit of seconds. The staring time and ending time of the simulation is specified under the key words \kw{\$}{TIME\_START} and \kw{\$}{TIME\_END}. 
 
 \begin{figure}
 \includegraphics[width=0.5\textwidth]{RT/figs/RT_fig_fixed_tim}
@@ -206,7 +206,7 @@ The fixed time stepping scheme is the most widely used time stepping setting. Th
 \label{fig:RT_fig_fixed_tim}
 \end{figure}
 
-In the configuration of Fig. \ref{fig:RT_fig_fixed_tim}, the User Module $GROUNDWATER\_FLOW$ is having the same time stepping scheme as the $REACT\_TRANS\_OPS$ module, i.e. 210 steps, each with 100 seconds. The user can also specify a gradually changing time step scheme. For example, we may want to run 10 steps first, with 10.0 seconds for each step, and then followed by 200 steps of 100.0 seconds each. The user can write ''10   10.0'' appending the key word $\$TIME\_STEPS$, followed by the ''200 100.0'' in the next line (demonstrated in Figure \ref{fig:RT_fig_adapt_tim}). 
+In the configuration of Fig. \ref{fig:RT_fig_fixed_tim}, the User Module \kw{}{GROUNDWATER\_FLOW} is having the same time stepping scheme as the \kw{}{REACT\_TRANS\_OPS} module, i.e. 210 steps, each with 100 seconds. The user can also specify a gradually changing time step scheme. For example, we may want to run 10 steps first, with 10.0 seconds for each step, and then followed by 200 steps of 100.0 seconds each. The user can write ''10   10.0'' appending the key word \kw{\$}{TIME\_STEPS}, followed by the ''200 100.0'' in the next line (demonstrated in Figure \ref{fig:RT_fig_adapt_tim}). 
 
 \begin{figure}
 \includegraphics[width=0.5\textwidth]{RT/figs/RT_fig_adapt_tim}
@@ -214,11 +214,11 @@ In the configuration of Fig. \ref{fig:RT_fig_fixed_tim}, the User Module $GROUND
 \label{fig:RT_fig_adapt_tim}
 \end{figure}
 
-For different User Modules, they can also have unsynchronized time stepping scheme. For example, when we have a static groundwater flow model, the velocity field of groundwater will remain the same after the first time step. Therefore, we do not need to simulate the groundwater again if permeability remains unchanged. As demonstrated in Figure \ref{fig:RT_fig_adapt_tim}, the user can specify a very small time step for $GROUNDWATER\_FLOW$ and $REACT\_TRANS\_OPS$ process at the beginning. From the second time step on, $GROUNDWATER\_FLOW$ will not be simulated. In this case, the reactive transport process will automatically inherit the velocity field from the last time step.
+For different User Modules, they can also have unsynchronized time stepping scheme. For example, when we have a static groundwater flow model, the velocity field of groundwater will remain the same after the first time step. Therefore, we do not need to simulate the groundwater again if permeability remains unchanged. As demonstrated in Figure \ref{fig:RT_fig_adapt_tim}, the user can specify a very small time step for \kw{}{GROUNDWATER\_FLOW} and \kw{}{REACT\_TRANS\_OPS} process at the beginning. From the second time step on, \kw{}{GROUNDWATER\_FLOW} will not be simulated. In this case, the reactive transport process will automatically inherit the velocity field from the last time step.
 
 \subsubsection{Adaptive Time Stepping Scheme}
 
-When the UserModule $REACT\_GIA$ is applied, another choice provided is to use the adaptive time stepping scheme. The general principle is, the size of next time step, is dependent on the nonlinear Newton iterations from the previous time step. As demonstrated in Figure \ref{fig:RT_fig_adapt_tim}, the user needs to write $NEWTON\_ADAPTIVE$ under the key word $\$TIME\_CONTROL$.  Then, a series of threshold values have to be given under the key word $ITER\_TIMES\_AND\_MULTIPLYER$, to define the threshold regarding the number of Newton iterations and the multiplying factor for the next step. When one of the thresholds is achieved, the next time step size can be prolonged (e.g. multiplied by a factor of 1.6), kept the same (e.g. times a factor of 1.0) or shortened (e.g. by cut it into a quarter or half). From our experience, the best practice is to keep the number of Newton iterations between 2 to 4 times in each time step. The reason is, along with the growth of domain size, the time needed for assembling the Jacobian matrix and solving the linear equation system will grow exponentially. If we need more than 5 - 7 Newton iterations to converge the nonlinear problem, it is often more economic to cut the time step size and reduce the number of Newton iterations. Although it needs more steps to finish the simulation, the time needed altogether will still be shorter. 
+When the UserModule $REACT\_GIA$ is applied, another choice provided is to use the adaptive time stepping scheme. The general principle is, the size of next time step, is dependent on the nonlinear Newton iterations from the previous time step. As demonstrated in Figure \ref{fig:RT_fig_adapt_tim}, the user needs to write \kw{}{NEWTON\_ADAPTIVE} under the key word \kw{\$}{TIME\_CONTROL}.  Then, a series of threshold values have to be given under the key word \kw{}{ITER\_TIMES\_AND\_MULTIPLYER}, to define the threshold regarding the number of Newton iterations and the multiplying factor for the next step. When one of the thresholds is achieved, the next time step size can be prolonged (e.g. multiplied by a factor of 1.6), kept the same (e.g. times a factor of 1.0) or shortened (e.g. by cut it into a quarter or half). From our experience, the best practice is to keep the number of Newton iterations between 2 to 4 times in each time step. The reason is, along with the growth of domain size, the time needed for assembling the Jacobian matrix and solving the linear equation system will grow exponentially. If we need more than 5 - 7 Newton iterations to converge the nonlinear problem, it is often more economic to cut the time step size and reduce the number of Newton iterations. Although it needs more steps to finish the simulation, the time needed altogether will still be shorter. 
 
 \subsection{Numerical Settings(*.NUM)}
 
@@ -235,19 +235,19 @@ When the UserModule $REACT\_GIA$ is applied, another choice provided is to use t
 \hline
 Index    & Solver Types  \\
 \hline
- 1  & GAUSS \\
- 2  & BICGSTAB \\
- 3  & BICG \\
- 5  & CG \\
-805 & PARDISO \\ 
- 9  & GMRES \\ 
+ 1  &\kw{}{ GAUSS} \\
+ 2  & \kw{}{BICGSTAB} \\
+ 3  & \kw{}{BICG} \\
+ 5  & \kw{}{CG} \\
+805 & \kw{}{PARDISO} \\ 
+ 9  & \kw{}{GMRES} \\ 
 \hline
 \end{tabular}
 \end{table}
 
-In the *.NUM file, the numerical settings are specified for each user module. A typical NUM file is demonstrated in Figure 2.9. Under the key word $\$LINEAR\_SOLVER$, the method, error tolerance, max number of iterations, preconditoner methods are defined. Current supported linear solver method can be found in table \ref{tab:RT_tab_linear_solvers}. 
+In the *.NUM file, the numerical settings are specified for each user module. A typical NUM file is demonstrated in Figure 2.9. Under the key word \kw{\$}{LINEAR\_SOLVER}, the method, error tolerance, max number of iterations, preconditoner methods are defined. Current supported linear solver method can be found in table \ref{tab:RT_tab_linear_solvers}. 
 
-Under the key word $\$NON\_LINEAR\_SOLVER$, currently only the NEWTON method is supported by the reactive transport UserModule $REACT\_GIA$.  The tolerance, max number of iterations, and relaxation factor can be given accordingly. 
+Under the key word \kw{\$}{NON\_LINEAR\_SOLVER}, currently only the NEWTON method is supported by the reactive transport UserModule \kw{}{REACT\_GIA}.  The tolerance, max number of iterations, and relaxation factor can be given accordingly. 
 
 
 \subsection{Output Control(*.OUT)}
@@ -258,7 +258,7 @@ Under the key word $\$NON\_LINEAR\_SOLVER$, currently only the NEWTON method is 
 \label{fig:RT_fig_out_file}
 \end{figure}
 
-Before the simulation starts running, the user has to define in the *.OUT file, regarding which variables, and which time step the results should be plotted. Figure \ref{fig:RT_fig_out_file} shows the OUT file for the calcite example. Through the reactive transport process, the geochemical system is calculated on each node, internally there is a vector of concentrations for all chemical components. The user can then directly write the name of chemical components after the key word $\$NOD\_VALUES$. After the key word $\$GEO\_TYPE$, the user specify which geometry of the domain the result will be plotted. If the key word DOMAIN is given, then all nodal values will be plotted into the file. The key word $\$TIM\_TYPE$ defines the output time configuration. Key words STEPS 10 means that the results will be printed every 10 time steps. The user can also write explicitly in several subsequent lines the exact time that needs result output.   
+Before the simulation starts running, the user has to define in the *.OUT file, regarding which variables, and which time step the results should be plotted. Figure \ref{fig:RT_fig_out_file} shows the OUT file for the calcite example. Through the reactive transport process, the geochemical system is calculated on each node, internally there is a vector of concentrations for all chemical components. The user can then directly write the name of chemical components after the key word \kw{\$}{NOD\_VALUES}. After the key word \kw{\$}{GEO\_TYPE}, the user specify which geometry of the domain the result will be plotted. If the key word DOMAIN is given, then all nodal values will be plotted into the file. The key word \kw{\$}{TIM\_TYPE} defines the output time configuration. Key words STEPS 10 means that the results will be printed every 10 time steps. The user can also write explicitly in several subsequent lines the exact time that needs result output.   
 
 \subsection{Running the Simulation}
 
@@ -298,11 +298,11 @@ with $\lambda$ the first order decay coefficient. We take this same benchmark ca
 $$
 Decay\_Father \rightarrow Decay\_Daughter
 $$
-The rate of this reaction was given using the user defined expression. Figure \ref{fig:RT_fig_decay1d_results} shows the simulation results by the $REACT\_GIA$ and $REACT\_TRANS\_OPS$ modules. We also plotted the analytic solution in the figure for comparison. It can be found that the results fit with each other. On the performance side, the ogs6 in $REACT\_TRANS\_OPS$ mode is considerably faster than ogs5, even though the ogs5 code is merely running mass transport simulations. If the user would prefer accuracy over speed, the $REACT\_GIA$ code can also be chosen. 
+The rate of this reaction was given using the user defined expression. Figure \ref{fig:RT_fig_decay1d_results} shows the simulation results by the \kw{}{REACT\_GIA} and \kw{}{REACT\_TRANS\_OPS} modules. We also plotted the analytic solution in the figure for comparison. It can be found that the results fit with each other. On the performance side, the ogs6 in \kw{}{REACT\_TRANS\_OPS} mode is considerably faster than ogs5, even though the ogs5 code is merely running mass transport simulations. If the user would prefer accuracy over speed, the \kw{}{REACT\_GIA} code can also be chosen. 
 
 \begin{figure}
 \includegraphics[width=0.7\textwidth]{RT/figs/RT_fig_decay1d_results}
-\caption{Results of the benchmark Decay1D. Comparison of simulated profile from $REACT\_GIA$, $REACT\_TRANS\_OPS$, and analytic solutions. }
+\caption{Results of the benchmark Decay1D. Comparison of simulated profile from \kw{}{REACT\_GIA}, \kw{}{REACT\_TRANS\_OPS}, and analytic solutions. }
 \label{fig:RT_fig_decay1d_results}
 \end{figure}
 
@@ -339,7 +339,7 @@ $k_1 = 1.57 \times 10^{-9} (1/s)$
 \end{tabular}
 \end{table}
 
-The results shown in Figure \ref{fig:RT_fig_neckar1d_result} were simulated by both operator splitting and global implicit modules. Therefore, they fit with each other very well. The small discrepancies in the concentration profile might be due to the mass lumping scheme implemented in the $REACT\_GIA$ module. 
+The results shown in Figure \ref{fig:RT_fig_neckar1d_result} were simulated by both operator splitting and global implicit modules. Therefore, they fit with each other very well. The small discrepancies in the concentration profile might be due to the mass lumping scheme implemented in the \kw{}{REACT\_GIA} module. 
 
 \begin{figure}
 \includegraphics[width=0.5\textwidth]{RT/figs/RT_fig_neckar1d_result_a}

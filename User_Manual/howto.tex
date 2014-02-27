@@ -14,11 +14,11 @@ Anyone who adds content to this file should add their name and affiliation to th
 If you add content, create a subdirectory with an appropriate name (e.g. process type or name of the numerical algorithm) and use \texttt{input} in the main file to include your content.
 
 \section{Keyword indexing}
-If you refer to OGS keywords, please add them to the index by using the \texttt{\\index} command:
+If you refer to OGS keywords, please add them to the index by using the \texttt{\\kw} command. The first argument is reserved for special characters, usually a \texttt{\$} sign, and can be left empty for keywords without any special initial characters. The second argument is the keyword.
 \begin{verbatim}
-	The porosity is given by $POROSITY \index{porosity}.
+	The porosity is given by \kw{\$}{POROSITY}. 
 \end{verbatim}
-Note that the index should be given without any \texttt{\$} sign.
+The command will ad the keyword without the leading special character to the index.
 
 \section{References}
 If you refer to published material reference it by including the appropriate *.bib file.
