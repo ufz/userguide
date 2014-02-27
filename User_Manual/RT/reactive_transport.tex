@@ -301,20 +301,52 @@ $$
 The rate of this reaction was given using the user defined expression. Figure \ref{fig:RT_fig_decay1d_results} shows the simulation results by the $REACT\_GIA$ and $REACT\_TRANS\_OPS$ modules. We also plotted the analytic solution in the figure for comparison. It can be found that the results fit with each other. On the performance side, the ogs6 in $REACT\_TRANS\_OPS$ mode is considerably faster than ogs5, even though the ogs5 code is merely running mass transport simulations. If the user would prefer accuracy over speed, the $REACT\_GIA$ code can also be chosen. 
 
 \begin{figure}
-\includegraphics[width=0.8\textwidth]{RT/figs/RT_fig_decay1d_results}
+\includegraphics[width=0.7\textwidth]{RT/figs/RT_fig_decay1d_results}
 \caption{Results of the benchmark Decay1D. Comparison of simulated profile from $REACT\_GIA$, $REACT\_TRANS\_OPS$, and analytic solutions. }
 \label{fig:RT_fig_decay1d_results}
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=0.8\textwidth]{RT/figs/RT_fig_decay1d_performance}
+\includegraphics[width=0.5\textwidth]{RT/figs/RT_fig_decay1d_performance}
 \caption{Comparison of simulation time needed by different OGS modules to run the Decay1D benchmark. }
 \label{fig:RT_fig_decay1d_performance}
 \end{figure}
 
 \subsection{Neckar1D with three kinetic reactions}
 
+TODO: domain of Neckar1D. 
 
+In the field of contaminant hydrogeology, it is well known that the organic carbon (DOC) can be degraded through different pathways. In the Neckar1D benchmark, we simulate the degradation of DOC, with oxygen, nitrate and sulfate as terminal electron acceptors. These three reactions are all kinetically controlled. Their formulation, and the corresponding rates, are summarized in Table \ref{tab:RT_tab_neckar1d}. 
+
+\begin{table}
+\label{tab:RT_tab_neckar1d}
+\caption{Reactions and parameters used in Neckar1D benchmark}
+\begin{tabular}{l l}
+\hline
+Reaction Formulations & Rate Expressions  \\
+\hline
+$ CH_2O + O_2 \rightarrow CO_2 + H_2O  $
+ & 
+$ R_{O_2} = -k_1 \cdot m_{CH_2O} \cdot \frac{m_{O_2}}{2.94 \times 10^{-4} + m_{O_2} } $ \\
+$ 1.25 CH_2O + NO_3^- \rightarrow 0.5N_2 + HCO_3^- + 0.25H_2CO_3 +  0.5H_2O $
+ & 
+$ R_{NO_3^-} = -k_1 \cdot m_{CH_2O} \cdot \frac{0.008m_{NO_3^-}}{1.55 \times 10^{-4} + m_{NO_3^-} } $ \\
+$ 2 CH_2O + SO_4^{2-} \rightarrow 2HCO_3^- + H_2S $
+ & 
+$ R_{SO_4^{2-}} = -k_1 \cdot m_{CH_2O} \cdot \frac{6.45 \times 10^{-5} m_{SO_4^{2-}}}{1.0 \times 10^{-4} + m_{SO_4^{2-}} } $ \\ 
+\hline
+$k_1 = 1.57 \times 10^{-9} (1/s)$
+\end{tabular}
+\end{table}
+
+The results shown in Figure \ref{fig:RT_fig_neckar1d_result} were simulated by both operator splitting and global implicit modules. Therefore, they fit with each other very well. The small discrepancies in the concentration profile might be due to the mass lumping scheme implemented in the $REACT\_GIA$ module. 
+
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{RT/figs/RT_fig_neckar1d_result_a}
+\includegraphics[width=0.5\textwidth]{RT/figs/RT_fig_neckar1d_result_b}
+\caption{Simulation result of the Neckar1D benchmark. }
+\label{fig:RT_fig_neckar1d_result}
+\end{figure}
 
 
 \subsection{Monod2D with kinetic reactions}
