@@ -1,0 +1,115 @@
+\documentclass[11pt,twoside,fleqn]{scrreprt}
+%\usepackage[utf8x]{inputenc}
+%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage[margin=2.0cm,bottom=2.5cm]{geometry}
+\usepackage{subfig}
+%\usepackage{ulem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{color}
+%\usepackage{amssymb}
+\usepackage{amsmath}
+%\usepackage{mathrsfs}
+%\usepackage{textgreek}
+%\usepackage{curves}
+%\usepackage{latexsym} % ein paar Symbole
+%\usepackage{textcomp} % ein paar Symbole
+%\usepackage{natbib}
+\usepackage{ulem}
+\usepackage{bbm}
+%\usepackage{mathtools}
+%\usepackage{cancel}
+%\usepackage{longtable}
+%\usepackage{booktabs}
+\usepackage[charter]{mathdesign}
+%\usepackage{mathptmx}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{authblk}
+%\usepackage{nomencl}
+\usepackage{makeidx}
+\normalem
+
+\nonfrenchspacing
+% \input{mycommands}
+
+
+
+\setlength\parindent{0pt}%Festlegen des Absatzeinzuges
+\setlength\parskip{10pt}%Festlegen des Absatzabstandes
+
+\pagestyle{fancy}
+\fancyfoot{}%clearall
+\fancyhead{}%clearall
+\renewcommand{\headrulewidth}{0pt} % no line in header area
+\fancyfoot[LE,RO]{\thepage} % page number in "outer" position of footer line
+%\fancyfoot[RE,LO]{OGS6 -- Theory Manual} % other info in "inner" position of footer line
+
+\makeindex
+
+%\makenomenclature
+%Define groups for nomenclature: Roman, Greek and Operators
+%\RequirePackage{ifthen}
+%\renewcommand{\nomgroup}[1]{\bigskip%
+%\ifthenelse{\equal{#1}{R}}{\item[\textit{Roman symbols}]}{%
+%\ifthenelse{\equal{#1}{G}}{\item[\textit{Greek symbols}]}{\ifthenelse{\equal{#1}{O}}{\item[\textit{Operators}]}}}}
+
+
+
+\begin{document}
+%List authors and affiliations here
+\author[1,2]{Haibing Shao}
+\author[1]{Sophie Schelenz}
+\author[3]{Norman Kist}
+\author[4]{Byoung Ohan Shim}
+\author[1,5]{Olaf Kolditz}
+\affil[1]{Helmholtz Centre for Environmental Research - UFZ, Leipzig, Germany}
+\affil[2]{Freiberg University of Mining and Technology, Freiberg, Germany}
+\affil[3]{Leipzig University of Applied Sciences - HTWK, Leipzig, Germany}
+\affil[4]{Korea Institute of Geoscience and Mineral Resources, Dajeon, South Korea}
+\affil[5]{Dresden University of Technology, Dresden, Germany}
+\makeatletter
+
+
+%Generate titlepage
+\date{\today}
+\input{titlepage}
+
+
+\tableofcontents
+\clearpage
+
+%Nomenclature
+%\printnomenclature%makeindex [].nlo -s nomencl.ist -o [].nls
+%\input{nomenclature}
+
+%Introduction, User guide
+\input{introduction}
+
+%Governing Equations and Mathematical Formulation
+\input{mathematics}
+
+%Implementation
+\input{implementation}
+
+%Setting up a model with one BHE
+\input{howtouse}
+
+%Model Verificationa and Validation
+\input{benchmarks}
+
+%Applications
+\input{applications}
+
+\renewcommand{\indexname}{Keyword index}
+\printindex
+
+\cleardoublepage
+\bibliographystyle{plain}
+\bibliography{common_bib_file}
+
+
+\end{document}
