@@ -242,7 +242,9 @@ For the pipeline or grout zone of the BHE, the mass matrix writes
    &\mbox{~for~}& k = g1, (g2, (g3, g4)). 
        \end{array} \right.
 \end{equation}
+The heat exchange terms are summarized in the matrix $\bm{R}^\pi$, 
 \begin{equation}
+\label{eqn:heat_exchange_term_R}
 \bm{R}^\pi = \left\{ \begin{array}{ll}
 \left( \begin{array}{cccccccc}
 \bm{R}_{i1} + \bm{R}_{io} & 0 & -\bm{R}_{io} & 0 & -\bm{R}_{i1} & 0 & 0 & 0 \\
@@ -279,10 +281,10 @@ For the pipeline or grout zone of the BHE, the mass matrix writes
 0 & \bm{L}_{i2} & 0 & 0 & 0 & 0 & 0 & 0 \\
 0 & 0 & \bm{L}_{o1} & 0 & 0 & 0 & 0 & 0 \\
 0 & 0 & 0 & \bm{L}_{o2} & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & \bm{L}_{g1} & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & \bm{L}_{g2} & 0 & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & \bm{L}_{g3} & 0 \\
-0 & 0 & 0 & 0 & 0 & 0 & 0 & \bm{L}_{g4} \end{array} \right)
+0 & 0 & 0 & 0 & \bm{L}_{ig} & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & \bm{L}_{ig} & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & \bm{L}_{og} & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & \bm{L}_{og} \end{array} \right)
   & \mbox{2U} \\
 \left( \begin{array}{cccc}
 \bm{L}_{i1} & 0 & 0 & 0  \\
@@ -319,7 +321,17 @@ For the source and sink terms,
 &\mbox{~for~}& \forall k. 
 \end{array}
 \end{equation}
-
+For the heat exchange terms $\bm{R_{\pi s}}$ and $\bm{R_{s \pi}}$, 
+\begin{equation}
+\bm{R}^{s \pi} = {\bm{R}^{\pi s}}^{T} = \left\{ \begin{array}{ll}
+(\bm{0}~\bm{0}~\bm{0}~\bm{0}~\bm{-R_s}~\bm{-R_s}~\bm{-R_s}~\bm{-R_s}) 
+   & \mbox{~~2U} \\
+(\bm{0}~\bm{0}~\bm{-R_s}~\bm{-R_s}) 
+   & \mbox{~~1U} \\
+(\bm{0}~\bm{0}~\bm{-R_s}) 
+   & \mbox{~~CXA or CXC} 
+       \end{array} \right.
+\end{equation}
 \subsection{Assembly of the Global Equation System}
 
 
