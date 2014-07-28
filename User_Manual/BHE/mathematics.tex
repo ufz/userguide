@@ -14,13 +14,14 @@ To exchange heat with the surrounding soil and rock, borehole heat exchangers ha
 %%
 In order to numerically simulate the heat transfer inside of a BHE, the device is further conceptualized by the so-called Resister-Capacitor model. This idea originates from the electrical engineering field. In a electrical circuit, if the electric current is hindered by a component, we call this component a Resistor. When a component is capable of storing the electricity, we call it a Capacitor. So the same concept is also applied to the heat transport process in a BHE. Taking the 1U type of BHE in Figure X as an example, there are 4 temperature values assigned to a BHE cross-section at a particular depth. They are $T_s$, $T_{i1}$, $T_{o1}$, $T_{g1}$ and $T_{g2}$, referring to the temperatures of the surrounding soil, the inlet pipe, the outlet pie, the 1st and the 2nd grout zone respectively. As a convention, we always assume the 1st grout zone is the one surrounding the inlet pipe. Following this concept, the heat transfer between the pipe and the soil can be divided into five pathways: i) between inlet pipe and 1st grout zone; ii) between outlet pipe and 2nd grout zone; iii) between 2 grout zones; iv) between 1st grout zone and the soil; v) between 2nd grout zone and the soil. The heat flux $q_n$ on each of these pathways, are driven by the temperature difference and regulated by the heat transfer coefficient $\Phi$. For example, the heat flux from inlet pipe to the 1st grout zone can be calculated by 
 \begin{equation}
+\label{eqn:heat_transfer}
 q_n = \Phi_{fig} \left( T_{i1} - T_{g1} \right), 
 \end{equation} 
 which is inversely dependent on the product of heat resistance $R$ and specific exchange area $S$
 \begin{equation}
 \Phi = \frac{1}{R S}
 \end{equation}
-Depending on the different pathways, we have corresponding heat transfer coefficients, denoted as $\Phi_{fig}$, $\Phi_{fog}$, $\Phi_{gg}$ and $\Phi_{gs}$.  
+Depending on the different pathways, we have corresponding heat transfer coefficients, denoted as $\Phi_{fig}$, $\Phi_{fog}$, $\Phi_{gg}$ and $\Phi_{gs}$. Details regarding how to calculate these heat transfer coefficients can be found in the paper of Diersch et al\cite{Diersch2011a}.  
 ~~\
 \section{Governing Equations}
 \subsection{Governing Equations for the Heat Transport Process in Soil}
@@ -34,17 +35,293 @@ with $\Lambda^s$ the tensor of thermal hydrodynamic dispersion and $H_s$ the sou
 \begin{equation}
 - \left(  \Lambda^s \cdot \nabla T_s  \right) = q_{n T_s}. 
 \end{equation}
-
-
 \subsection{Governing Equations for the Borehole Heat Exchangers}
+The governing equations for the BHE write differently, depending on whether it is for the pipelines or for the grout zones. For the pipelines, the heat transport process is dominated by the convection of the refrigerant. 
+\begin{eqnarray}
+\label{eqn:gov_eqn_bhe_pipe}
+\rho^r c^r \frac{\partial T_k}{\partial t} 
++ \rho^r c^r \mathbf{u} \cdot \nabla T_k 
+- \nabla \cdot \left( \Lambda^r \cdot \nabla T_k \right)
+&=& H_k \mathrm{~in~} \Omega_k \nonumber \\
+\mathrm{with~Cauchy~type~of~BC:~} -\left( \Lambda^r \cdot \nabla T_k \right) \cdot n 
+&=& q_{nT_k} \mathrm{~on~} \Gamma_k   \nonumber \\
+\mathrm{for~} k &=& i1, o1, (i2, o2) 
+\end{eqnarray}
+$\Lambda^r$ stands for the hydrodynamic thermodispersion for the refrigerant,  
+\begin{equation}
+\Lambda^r= \left( \lambda^r + \rho^r c^r \beta_L \| \bm{u} \| \right) \delta. 
+\end{equation}
+For the grout zones, the heat transport is mainly controlled by the heat dissipation. 
+\begin{eqnarray}
+\label{eqn:gov_eqn_bhe_grout}
+\varepsilon^g \rho^g c^g \frac{\partial T_k}{\partial t} 
+- \nabla \cdot \left( \varepsilon^g \lambda^g \cdot \nabla T_k \right)
+&=& H_k \mathrm{~in~} \Omega_k \nonumber \\
+\mathrm{with~Cauchy~type~of~BC:~} -\left( \varepsilon^g \lambda^g \cdot \nabla T_k \right) \cdot n 
+&=& q_{nT_k} \mathrm{~on~} \Gamma_k   \nonumber \\
+\mathrm{for~} k &=& g1, (g2, (g3, g4)) 
+\end{eqnarray}
 
+\subsection{Calculation of the Cauchy type of Boundary Conditions}
+The Cauchy type of boundary conditions exit for the soil part, for the pipelines, and also for the grout zones. They are regulating the heat exchange terms between these zones. In general, the heat exchange flux $q_{nT_k}$ is proportional to the difference of the Temperatures (see Equation \ref{eqn:heat_transfer}). The calculation of these flux terms is summarized in Table \ref{tab:heat_ex_terms}. 
+
+\begin{table}
+\caption{Boundary heat fluxes $q_{nTk}$ for different types of BHEs, reproduced after the FEFLOW book \cite{FEFLOW2014}. }
+\label{tab:heat_ex_terms}
+\begin{tabular}{l*{5}{c}}
+\hline
+k              & 2U & 1U & CXA & CXC \\
+\hline
+i1             & $-\Phi_{fig}^{2U}(T_{g1}-T_{i1})$
+               & $-\Phi_{fig}^{1U}(T_{g1}-T_{i1})$  
+               & $-\Phi_{fig}^{CXA}(T_{g1}-T_{i1})-\Phi_{ff}^{CXA}(T_{o1}-T_{i1})$
+               & $-\Phi_{ff}^{CXC}(T_{o1}-T_{i1})$ \\
+i2             & $-\Phi_{fig}^{2U}(T_{g2}-T_{i2})$
+               & -  & -  & - \\
+o1             & $-\Phi_{fog}^{2U}(T_{g3}-T_{o1})$
+               & $-\Phi_{fog}^{1U}(T_{g2}-T_{o1})$  
+			   & $-\Phi_{ff}^{CXA}(T_{i1}-T_{o1})$               
+               & $-\Phi_{fog}^{CXC}(T_{g1}-T_{o1})-\Phi_{ff}^{CXC}(T_{i1}-T_{o1})$ \\
+o2             & $-\Phi_{fog}^{2U}(T_{g4}-T_{o2})$
+               & -  & -  & - \\
+g1             & $-\Phi_{gs}^{2U}(T_{s}-T_{g1})
+                  -\Phi_{fig}^{2U}(T_{i1}-T_{g1}) 
+                  -\Phi_{gg2}^{2U}(T_{g2}-T_{g1}) 
+                  -\Phi_{gg1}^{2U}(T_{g3}-T_{g1})
+                  -\Phi_{gg1}^{2U}(T_{g4}-T_{g1})$  
+               & $-\Phi_{gs}^{1U}(T_{s}-T_{g1})
+                  -\Phi_{fig}^{1U}(T_{i1}-T_{g1}) 
+                  -\Phi_{gg}^{1U}(T_{g2}-T_{g1})$  
+               & $-\Phi_{gs}^{CXA}(T_{s}-T_{g1})
+                  -\Phi_{fig}^{CXA}(T_{i1}-T_{g1})$
+               & $-\Phi_{gs}^{CXC}(T_{s}-T_{g1})
+                  -\Phi_{fog}^{CXC}(T_{o1}-T_{g1})$ \\
+g2             & $-\Phi_{gs}^{2U}(T_{s}-T_{g2})
+                  -\Phi_{fig}^{2U}(T_{i2}-T_{g2}) 
+                  -\Phi_{gg2}^{2U}(T_{g1}-T_{g2}) 
+                  -\Phi_{gg1}^{2U}(T_{g3}-T_{g2})
+                  -\Phi_{gg1}^{2U}(T_{g4}-T_{g2})$
+               & $-\Phi_{gs}^{1U}(T_{s}-T_{g2})
+                  -\Phi_{fog}^{1U}(T_{o1}-T_{g2}) 
+                  -\Phi_{gg}^{1U}(T_{g1}-T_{g2})$   
+               & -   
+               & - \\
+g3             & $-\Phi_{gs}^{2U}(T_{s}-T_{g3})
+                  -\Phi_{fig}^{2U}(T_{o1}-T_{g3}) 
+                  -\Phi_{gg2}^{2U}(T_{g4}-T_{g3}) 
+                  -\Phi_{gg1}^{2U}(T_{g1}-T_{g3})
+                  -\Phi_{gg1}^{2U}(T_{g2}-T_{g3})$
+               & -  
+               & -   
+               & - \\
+g4             & $-\Phi_{gs}^{2U}(T_{s}-T_{g4})
+                  -\Phi_{fig}^{2U}(T_{o2}-T_{g4}) 
+                  -\Phi_{gg2}^{2U}(T_{g3}-T_{g4}) 
+                  -\Phi_{gg1}^{2U}(T_{g1}-T_{g4})
+                  -\Phi_{gg1}^{2U}(T_{g2}-T_{g4})$  
+               & -  
+               & -   
+               & - \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Numerical Model}
+%%
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig/simple_mesh_geometry}
+\end{center}
+\caption{Mesh and geometry structure, with soil domain represented by prism elements and BHE by line elements. }
+\label{fig:simple_mesh}
+\end{figure}
+%%
 
 \subsection{Mesh Arrangement}
+To simulate the heat transport process together with BHEs, a dual-continuum approach has been adopted to treat the soil and BHEs part respectively. For the soil part, prism elements are used to discretize the 3D domain. In addition to that, 1D line elements along the edge of the prism elements are chosen to form the 2nd domain, representing BHEs. The example illustrated in Figure \ref{fig:simple_mesh} contains a mesh structure with 12 nodes and 6 element. Node "0" - "11" forms the 3 prism elements, which refers to the the soil domain. The BHE domain is composed of 3 line elements in red color. Notice the node "2", "5", "8" and "11" are both employed by the prim and the line elements. As a result, the total number of nodes remains the same and the number of elements slightly increases. In soil domain, there is only one primary variable, the soil temperature, on each node. While in the BHE domain, each node has 4, 8, or 3 primary variables, depending on the type of the BHE. Table \ref{tab:bhe_primary_variables} summarizes these combinations. 
+%%
+\begin{table}
+\caption{Different combination of primary variables for the borehole heat exchangers. }
+\label{tab:bhe_primary_variables}
+\centering
+\begin{tabular}{l l l}
+\hline
+Type of BHE    & Number of Primary Variables & Combination of Primary Variables \\
+\hline
+1U             & 4 & $\mathrm{T_{i1},~T_{o1},~T_{g1},~T_{g2}}$\\
+2U             & 8 & $\mathrm{T_{i1},~T_{i2},~T_{o1},~T_{o2},~T_{g1},~T_{g2},~T_{g3},~T_{g4}}$\\
+CXA            & 3 & $\mathrm{T_{i1},~T_{o1},~T_{g1}}$\\
+CXC            & 3 & $\mathrm{T_{i1},~T_{o1},~T_{g1}}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The following text box shows the content of the mesh file for OpenGeoSys. Under the key word \textit{\$NODES}, the number \textit{12} tells the software there are all together 12 nodes. This is followed by a section of node coordinate information. Each node begins with a index number, then the x, y, and z coordinates. The keyword \$ELEMENTS signals the begin of element information. Here we have 6 elements, with 3 prisms and 3 lines. Similar to the node information, each element begins with an index value, then a second index linking to the corresponding material properties. The keywords \textit{pris} and \textit{line} reflects the type of the element, followed by the index of nodes that are connected to this element. 
+%%
+\begin{Verbatim}[gobble=0, 
+                 frame=single, 
+                 label=Mesh File, 
+                 numbers=left]
+#FEM_MSH
+ $PCS_TYPE
+  GROUNDWATER_FLOW
+ $NODES
+  12 
+0 0 0 0
+1 0 1 0
+2 1 0 0
+3 0 1 1
+4 0 0 1
+5 1 0 1
+6 0 1 2
+7 0 0 2
+8 1 0 2
+9 0 1 3
+10 0 0 3
+11 1 0 3
+  $ELEMENTS
+  6 
+0 0 pris 2 1 0 5 3 4
+1 0 pris 5 3 4 8 6 7
+2 0 pris 8 6 7 11 9 10 
+3 1 line 9 6
+4 1 line 6 3
+5 1 line 3 1
+#STOP
+\end{Verbatim}
 
 \subsection{Finite Element Discretization}
+For the domain of BHEs, the governing equations \ref{eqn:gov_eqn_bhe_pipe} and \ref{eqn:gov_eqn_bhe_grout} are discretized by finite elements. If introducing the spatial weighting function $\omega$, the weak statements wirte as
+\begin{eqnarray}
+\label{eqn:gov_eqn_bhe_pipe_dis}
+\int_{\Omega_k} \left[ \omega \rho^r c^r \left( \frac{\partial T_k}{\partial t} + \bm{u} \cdot \nabla T_k \right) + \nabla \omega \cdot \left( \Lambda^r \cdot \nabla T_k \right) \right] d\Omega &=&~ \nonumber\\
+-\int_{\Gamma_k} \omega q_{nT_k} d\Gamma_k + \int_{\Omega_k} \omega H_k d\Omega &~& \mathrm{~for~k~}=~i1,~o1,~(i2,~o2)
+\end{eqnarray}
+for the pipelines, and 
+\begin{eqnarray}
+\label{eqn:gov_eqn_bhe_grout_dis}
+\int_{\Omega_k} \left[ \omega \rho^g c^g \frac{\partial T_k}{\partial t} + \nabla \omega \cdot \left( \Lambda^g \cdot \nabla T_k \right) \right] d\Omega &=&~ \nonumber\\
+-\int_{\Gamma_k} \omega q_{nT_k} d\Gamma_k + \int_{\Omega_k} \omega H_k d\Omega &~& \mathrm{~for~k~}=~g1,~(g2,~(g3,~g4))
+\end{eqnarray}
+for the grout zones. If using Galerkin Finite Element Method (GFEM), the above equation \ref{eqn:gov_eqn_bhe_pipe_dis} and \ref{eqn:gov_eqn_bhe_grout_dis} can be written in the matrix form. 
+\begin{equation}
+\bm{P}^\pi \cdot \bm{\dot{T}}^\pi + ( \bm{L^\pi} + \bm{R^\pi} ) \cdot \bm{T^\pi} = \bm{W}^\pi - \bm{R}^{\pi s} \cdot \bm{T}^{s}
+\end{equation}
+with the time derivative related mass matrix $\bm{P}^\pi$ formulated as
+\begin{equation}
+\bm{P}^\pi = \left\{ \begin{array}{ll}
+\left( \begin{array}{cccccccc}
+\bm{P}_{i1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & \bm{P}_{i2} & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & \bm{P}_{o1} & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & \bm{P}_{o2} & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & \bm{P}_{g1} & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & \bm{P}_{g2} & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & \bm{P}_{g3} & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & \bm{P}_{g4} \end{array} \right)
+  & \mbox{2U} \\
+\left( \begin{array}{cccc}
+\bm{P}_{i1} & 0 & 0 & 0  \\
+0 & \bm{P}_{o1} & 0 & 0  \\
+0 & 0 & \bm{P}_{g1} & 0  \\
+0 & 0 & 0 & \bm{P}_{g2}  \end{array} \right)
+ & \mbox{1U} \\
+\left( \begin{array}{ccc}
+\bm{P}_{i1} & 0 & 0  \\
+0 & \bm{P}_{o1} & 0  \\
+0 & 0 & \bm{P}_{g1}  \end{array} \right)
+ & \mbox{CXA or CXC. } \\
+       \end{array} \right.
+\end{equation}
+For the pipeline or grout zone of the BHE, the mass matrix writes
+\begin{equation}
+\bm{P}_k = \left\{ \begin{array}{rcl}
+\Sigma_{e} \int_{\Omega_k^e} \rho^r c^r N_i N_j d\Omega^e 
+   &\mbox{~for~}& k = i1, o1, (i2, o2) \\
+\Sigma_{e} \int_{\Omega_k^e} \rho^g c^g N_i N_j d\Omega^e 
+   &\mbox{~for~}& k = g1, (g2, (g3, g4)). 
+       \end{array} \right.
+\end{equation}
+\begin{equation}
+\bm{R}^\pi = \left\{ \begin{array}{ll}
+\left( \begin{array}{cccccccc}
+\bm{R}_{i1} + \bm{R}_{io} & 0 & -\bm{R}_{io} & 0 & -\bm{R}_{i1} & 0 & 0 & 0 \\
+0 & \bm{R}_{i2} & 0 & 0 & 0 & -\bm{R}_{i2} & 0 & 0 \\
+-\bm{R}_{io} & 0 & \bm{R}_{io} + \bm{R}_{o1} & 0 & 0 & 0 & -\bm{R}_{o1} & 0 \\
+0 & 0 & 0 & \bm{R}_{o2} & 0 & 0 & 0 & -\bm{R}_{o2} \\
+-\bm{R}_{i1} & 0 & 0 & 0 & \bm{R}_{i1}+2\bm{R}_{g1}+\bm{R}_{g2}+\bm{R}_{s} & -\bm{R}_{g2} & -\bm{R}_{g1} & -\bm{R}_{g1} \\
+0 & -\bm{R}_{i2} & 0 & 0 & -\bm{R}_{g2} & \bm{R}_{i2}+2\bm{R}_{g1}+\bm{R}_{g2}+\bm{R}_{s} & -\bm{R}_{g1} & -\bm{R}_{g1} \\
+0 & 0 & -\bm{R}_{o1} & 0 & -\bm{R}_{g1} & -\bm{R}_{g1} & \bm{R}_{o1}+2\bm{R}_{g1}+\bm{R}_{g2}+\bm{R}_{s} & 0 \\
+0 & 0 & 0 & -\bm{R}_{o2} & -\bm{R}_{g1} & -\bm{R}_{g1} & -\bm{R}_{g2} & \bm{R}_{o2}+2\bm{R}_{g1}+\bm{R}_{g2}+\bm{R}_{s} \end{array} \right)
+  & \mbox{2U} \\
+\left( \begin{array}{cccc}
+\bm{R}_{i1}+\bm{R}_{io} & -\bm{R}_{io} & -\bm{R}_{i1} & 0  \\
+-\bm{R}_{io} & \bm{R}_{o1}+\bm{R}_{io} & 0 & -\bm{R}_{o1}  \\
+-\bm{R}_{i1} & 0 & \bm{R}_{i1}+\bm{R}_{g1} & -\bm{R}_{g1}  \\
+0 & -\bm{R}_{o1} & -\bm{R}_{g1} & \bm{R}_{o1}+\bm{R}_{g1}  \end{array} \right)
+ & \mbox{1U} \\
+\left( \begin{array}{ccc}
+\bm{R}_{i1}+\bm{R}_{io} & -\bm{R}_{io} & -\bm{R}_{i1}  \\
+-\bm{R}_{io} & \bm{R}_{io} & 0  \\
+-\bm{R}_{i1} & 0 & \bm{R}_{i1}  \end{array} \right)
+ & \mbox{CXA} \\
+\left( \begin{array}{ccc}
+\bm{R}_{io} & -\bm{R}_{io} & 0  \\
+-\bm{R}_{io} & \bm{R}_{io}+\bm{R}_{o1} & -\bm{R}_{o1}  \\
+0 & -\bm{R}_{o1} & \bm{R}_{o1}  \end{array} \right)
+ & \mbox{CXA} 
+       \end{array} \right.
+\end{equation}
+\begin{equation}
+\bm{L}^\pi = \left\{ \begin{array}{ll}
+\left( \begin{array}{cccccccc}
+\bm{L}_{i1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & \bm{L}_{i2} & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & \bm{L}_{o1} & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & \bm{L}_{o2} & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & \bm{L}_{g1} & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & \bm{L}_{g2} & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & \bm{L}_{g3} & 0 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & \bm{L}_{g4} \end{array} \right)
+  & \mbox{2U} \\
+\left( \begin{array}{cccc}
+\bm{L}_{i1} & 0 & 0 & 0  \\
+0 & \bm{L}_{o1} & 0 & 0  \\
+0 & 0 & \bm{L}_{g1} & 0  \\
+0 & 0 & 0 & \bm{L}_{g2}  \end{array} \right)
+ & \mbox{1U} \\
+\left( \begin{array}{ccc}
+\bm{L}_{i1} & 0 & 0  \\
+0 & \bm{L}_{o1} & 0  \\
+0 & 0 & \bm{L}_{g1}  \end{array} \right)
+ & \mbox{CXA or CXC} \\
+       \end{array} \right.
+\end{equation}
+For the pipeline part, the transport operator $L$ is composed of both advection and dispersion terms, 
+\begin{equation}
+\begin{array}{lll}
+\bm{L}_k = \Sigma_{e} \int_{\Omega_k^e} \left( N_i \rho^r c^r \nabla N_j 
++ \nabla N_i \cdot ( \Lambda \cdot \nabla N_j ) \right) d\Omega^e 
+&\mbox{~for~}& k = i1, o1, (i2, o2). 
+\end{array}
+\end{equation}
+While for the grout zones, only the heat dissipation terms contribute, 
+\begin{equation}
+\begin{array}{lll}
+\bm{L}_{ig} = \bm{L}_{og} = \Sigma_{e} \int_{\Omega_k^e} \nabla N_i \cdot ( \Lambda^g \cdot \nabla N_j ) d\Omega^e 
+&\mbox{~for~}& k = (g1, g2, g3, g4). 
+\end{array}
+\end{equation}
+For the source and sink terms, 
+\begin{equation}
+\begin{array}{lll}
+\bm{W}_{k} = \Sigma_{e} \int_{\Omega_k^e} N_i H_k d\Omega^e 
+&\mbox{~for~}& \forall k. 
+\end{array}
+\end{equation}
 
 \subsection{Assembly of the Global Equation System}
+
+
 
 \subsection{Picard Iterations and Time Step Schemes}
