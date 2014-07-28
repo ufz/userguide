@@ -28,7 +28,7 @@ Depending on the different pathways, we have corresponding heat transfer coeffic
 For the heat transport process in the soil, the development of soil temperature $T_s$ is contributed by both the heat convection of the fluid $f$ in the soil and the heat conduction through the soil matrix. Let $\rho^s$, $\rho^f$ and $c^s$, $c^f$ be the density and specific heat capacity of fluid $f$ and soil $s$. If assuming the soil matrix is fully saturated with groundwater, the Darcy velocity of which is described by the vector $q$, then the conservation equation writes as
 \begin{equation}
 \frac{\partial}{\partial t}  \left[ \epsilon \rho^f c^f + ( 1-\epsilon ) \rho^s c^s \right]  T_s 
-+ \nabla \cdot \left(  \rho^f c^f \bf{q} T_s  \right) 
++ \nabla \cdot \left(  \rho^f c^f \mathbf{q} T_s  \right) 
 - \nabla \cdot \left(  \Lambda^s \cdot \nabla T_s  \right) = H_s,  
 \end{equation}
 with $\Lambda^s$ the tensor of thermal hydrodynamic dispersion and $H_s$ the source and sink terms for heat. When considering the heat exchange between the BHEs and the soil, the above governing equation is subject to a Cauchy-type of boundary condition: 
@@ -66,63 +66,57 @@ For the grout zones, the heat transport is mainly controlled by the heat dissipa
 The Cauchy type of boundary conditions exit for the soil part, for the pipelines, and also for the grout zones. They are regulating the heat exchange terms between these zones. In general, the heat exchange flux $q_{nT_k}$ is proportional to the difference of the Temperatures (see Equation \ref{eqn:heat_transfer}). The calculation of these flux terms is summarized in Table \ref{tab:heat_ex_terms}. 
 
 \begin{table}
+\centering
 \caption{Boundary heat fluxes $q_{nTk}$ for different types of BHEs, reproduced after the FEFLOW book \cite{FEFLOW2014}. }
 \label{tab:heat_ex_terms}
-\begin{tabular}{l*{5}{c}}
-\hline
+\begin{tabular}{p{1cm}p{3cm}p{3cm}p{3cm}p{3cm}}
+\hline \hline
 k              & 2U & 1U & CXA & CXC \\
+\hline \hline
+\multirow{2}{*}{i1}    & $-\Phi_{fig}^{2U}(T_{g1}-T_{i1})$ 
+                       & $-\Phi_{fig}^{1U}(T_{g1}-T_{i1})$  
+                       & $-\Phi_{fig}^{CXA}(T_{g1}-T_{i1})$
+                       & $-\Phi_{ff}^{CXC}(T_{o1}-T_{i1})$ \\
+                       & & & $-\Phi_{ff}^{CXA}(T_{o1}-T_{i1})$ & \\
 \hline
-i1             & $-\Phi_{fig}^{2U}(T_{g1}-T_{i1})$
-               & $-\Phi_{fig}^{1U}(T_{g1}-T_{i1})$  
-               & $-\Phi_{fig}^{CXA}(T_{g1}-T_{i1})-\Phi_{ff}^{CXA}(T_{o1}-T_{i1})$
-               & $-\Phi_{ff}^{CXC}(T_{o1}-T_{i1})$ \\
 i2             & $-\Phi_{fig}^{2U}(T_{g2}-T_{i2})$
                & -  & -  & - \\
-o1             & $-\Phi_{fog}^{2U}(T_{g3}-T_{o1})$
-               & $-\Phi_{fog}^{1U}(T_{g2}-T_{o1})$  
-			   & $-\Phi_{ff}^{CXA}(T_{i1}-T_{o1})$               
-               & $-\Phi_{fog}^{CXC}(T_{g1}-T_{o1})-\Phi_{ff}^{CXC}(T_{i1}-T_{o1})$ \\
+\hline
+\multirow{2}{*}{o1}    & $-\Phi_{fog}^{2U}(T_{g3}-T_{o1})$
+                       & $-\Phi_{fog}^{1U}(T_{g2}-T_{o1})$  
+                       & $-\Phi_{ff}^{CXA}(T_{i1}-T_{o1})$               
+                       & $-\Phi_{fog}^{CXC}(T_{g1}-T_{o1})$ \\
+                       & & & & $-\Phi_{ff}^{CXC}(T_{i1}-T_{o1})$\\
+\hline
 o2             & $-\Phi_{fog}^{2U}(T_{g4}-T_{o2})$
                & -  & -  & - \\
-g1             & $-\Phi_{gs}^{2U}(T_{s}-T_{g1})
-                  -\Phi_{fig}^{2U}(T_{i1}-T_{g1}) 
-                  -\Phi_{gg2}^{2U}(T_{g2}-T_{g1}) 
-                  -\Phi_{gg1}^{2U}(T_{g3}-T_{g1})
-                  -\Phi_{gg1}^{2U}(T_{g4}-T_{g1})$  
-               & $-\Phi_{gs}^{1U}(T_{s}-T_{g1})
-                  -\Phi_{fig}^{1U}(T_{i1}-T_{g1}) 
-                  -\Phi_{gg}^{1U}(T_{g2}-T_{g1})$  
-               & $-\Phi_{gs}^{CXA}(T_{s}-T_{g1})
-                  -\Phi_{fig}^{CXA}(T_{i1}-T_{g1})$
-               & $-\Phi_{gs}^{CXC}(T_{s}-T_{g1})
-                  -\Phi_{fog}^{CXC}(T_{o1}-T_{g1})$ \\
-g2             & $-\Phi_{gs}^{2U}(T_{s}-T_{g2})
-                  -\Phi_{fig}^{2U}(T_{i2}-T_{g2}) 
-                  -\Phi_{gg2}^{2U}(T_{g1}-T_{g2}) 
-                  -\Phi_{gg1}^{2U}(T_{g3}-T_{g2})
-                  -\Phi_{gg1}^{2U}(T_{g4}-T_{g2})$
-               & $-\Phi_{gs}^{1U}(T_{s}-T_{g2})
-                  -\Phi_{fog}^{1U}(T_{o1}-T_{g2}) 
-                  -\Phi_{gg}^{1U}(T_{g1}-T_{g2})$   
-               & -   
-               & - \\
-g3             & $-\Phi_{gs}^{2U}(T_{s}-T_{g3})
-                  -\Phi_{fig}^{2U}(T_{o1}-T_{g3}) 
-                  -\Phi_{gg2}^{2U}(T_{g4}-T_{g3}) 
-                  -\Phi_{gg1}^{2U}(T_{g1}-T_{g3})
-                  -\Phi_{gg1}^{2U}(T_{g2}-T_{g3})$
-               & -  
-               & -   
-               & - \\
-g4             & $-\Phi_{gs}^{2U}(T_{s}-T_{g4})
-                  -\Phi_{fig}^{2U}(T_{o2}-T_{g4}) 
-                  -\Phi_{gg2}^{2U}(T_{g3}-T_{g4}) 
-                  -\Phi_{gg1}^{2U}(T_{g1}-T_{g4})
-                  -\Phi_{gg1}^{2U}(T_{g2}-T_{g4})$  
-               & -  
-               & -   
-               & - \\
 \hline
+\multirow{5}{*}{g1}    & $-\Phi_{gs}^{2U}(T_{s}-T_{g1})  $ & $-\Phi_{gs}^{1U}(T_{s}-T_{g1})$     
+               & $-\Phi_{gs}^{CXC}(T_{s}-T_{g1})$ & $-\Phi_{gs}^{CXA}(T_{s}-T_{g1})$ \\   
+                       & $-\Phi_{fig}^{2U}(T_{i1}-T_{g1})$ & $-\Phi_{fig}^{1U}(T_{i1}-T_{g1})$  
+               & $-\Phi_{fog}^{CXC}(T_{o1}-T_{g1})$ & $-\Phi_{gs}^{CXA}(T_{s}-T_{g1})$ \\
+                       & $-\Phi_{gg2}^{2U}(T_{g2}-T_{g1})$ & $-\Phi_{gg}^{1U}(T_{g2}-T_{g1})$    &-&-\\
+                       & $-\Phi_{gg1}^{2U}(T_{g3}-T_{g1})$ &                                     &~&~\\
+                       & $-\Phi_{gg1}^{2U}(T_{g4}-T_{g1})$ &                                     &~&~\\
+\hline
+\multirow{5}{*}{g2}    & $-\Phi_{gs}^{2U}(T_{s}-T_{g2})$   & $-\Phi_{gs}^{1U}(T_{s}-T_{g2})$     &~&~\\ 
+                       & $-\Phi_{fig}^{2U}(T_{i2}-T_{g2})$ & $-\Phi_{fog}^{1U}(T_{o1}-T_{g2})$   &~&~\\
+                       & $-\Phi_{gg2}^{2U}(T_{g1}-T_{g2})$ & $-\Phi_{gg}^{1U}(T_{g1}-T_{g2})$    &-&-\\
+                       & $-\Phi_{gg1}^{2U}(T_{g3}-T_{g2})$ &                                     &~&~\\
+                       & $-\Phi_{gg1}^{2U}(T_{g4}-T_{g2})$ &                                     &~&~\\
+\hline
+\multirow{5}{*}{g3}    & $-\Phi_{gs}^{2U}(T_{s}-T_{g3})$   &                                     &~&~\\
+                       & $-\Phi_{fig}^{2U}(T_{o1}-T_{g3})$ &                                     &~&~\\
+                       & $ -\Phi_{gg2}^{2U}(T_{g4}-T_{g3})$&-                                    &-&-\\
+                       & $-\Phi_{gg1}^{2U}(T_{g1}-T_{g3})$ &                                     &~&~\\
+                       & $-\Phi_{gg1}^{2U}(T_{g2}-T_{g3})$ &                                     &~&~\\
+\hline
+\multirow{5}{*}{g4}    & $-\Phi_{gs}^{2U}(T_{s}-T_{g4})$   &                                     &~&~\\
+                       & $-\Phi_{fig}^{2U}(T_{o2}-T_{g4})$ &                                     &~&~\\
+                       & $-\Phi_{gg2}^{2U}(T_{g3}-T_{g4})$ &-                                    &-&-\\
+                       & $-\Phi_{gg1}^{2U}(T_{g1}-T_{g4})$ &                                     &~&~\\
+                       & $-\Phi_{gg1}^{2U}(T_{g2}-T_{g4})$ &                                     &~&~\\
+\hline \hline
 \end{tabular}
 \end{table}
 
@@ -246,6 +240,7 @@ The heat exchange terms are summarized in the matrix $\bm{R}^\pi$,
 \begin{equation}
 \label{eqn:heat_exchange_term_R}
 \bm{R}^\pi = \left\{ \begin{array}{ll}
+\scalemath{0.5}{
 \left( \begin{array}{cccccccc}
 \bm{R}_{i1} + \bm{R}_{io} & 0 & -\bm{R}_{io} & 0 & -\bm{R}_{i1} & 0 & 0 & 0 \\
 0 & \bm{R}_{i2} & 0 & 0 & 0 & -\bm{R}_{i2} & 0 & 0 \\
@@ -255,22 +250,29 @@ The heat exchange terms are summarized in the matrix $\bm{R}^\pi$,
 0 & -\bm{R}_{i2} & 0 & 0 & -\bm{R}_{g2} & \bm{R}_{i2}+2\bm{R}_{g1}+\bm{R}_{g2}+\bm{R}_{s} & -\bm{R}_{g1} & -\bm{R}_{g1} \\
 0 & 0 & -\bm{R}_{o1} & 0 & -\bm{R}_{g1} & -\bm{R}_{g1} & \bm{R}_{o1}+2\bm{R}_{g1}+\bm{R}_{g2}+\bm{R}_{s} & 0 \\
 0 & 0 & 0 & -\bm{R}_{o2} & -\bm{R}_{g1} & -\bm{R}_{g1} & -\bm{R}_{g2} & \bm{R}_{o2}+2\bm{R}_{g1}+\bm{R}_{g2}+\bm{R}_{s} \end{array} \right)
+}
   & \mbox{2U} \\
+\scalemath{0.7}{
 \left( \begin{array}{cccc}
 \bm{R}_{i1}+\bm{R}_{io} & -\bm{R}_{io} & -\bm{R}_{i1} & 0  \\
 -\bm{R}_{io} & \bm{R}_{o1}+\bm{R}_{io} & 0 & -\bm{R}_{o1}  \\
 -\bm{R}_{i1} & 0 & \bm{R}_{i1}+\bm{R}_{g1} & -\bm{R}_{g1}  \\
 0 & -\bm{R}_{o1} & -\bm{R}_{g1} & \bm{R}_{o1}+\bm{R}_{g1}  \end{array} \right)
+}
  & \mbox{1U} \\
+\scalemath{0.7}{
 \left( \begin{array}{ccc}
 \bm{R}_{i1}+\bm{R}_{io} & -\bm{R}_{io} & -\bm{R}_{i1}  \\
 -\bm{R}_{io} & \bm{R}_{io} & 0  \\
 -\bm{R}_{i1} & 0 & \bm{R}_{i1}  \end{array} \right)
+}
  & \mbox{CXA} \\
+\scalemath{0.7}{
 \left( \begin{array}{ccc}
 \bm{R}_{io} & -\bm{R}_{io} & 0  \\
 -\bm{R}_{io} & \bm{R}_{io}+\bm{R}_{o1} & -\bm{R}_{o1}  \\
 0 & -\bm{R}_{o1} & \bm{R}_{o1}  \end{array} \right)
+}
  & \mbox{CXA} 
        \end{array} \right.
 \end{equation}
