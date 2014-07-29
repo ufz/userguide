@@ -27,6 +27,7 @@ Depending on the different pathways, we have corresponding heat transfer coeffic
 \subsection{Governing Equations for the Heat Transport Process in Soil}
 For the heat transport process in the soil, the development of soil temperature $T_s$ is contributed by both the heat convection of the fluid $f$ in the soil and the heat conduction through the soil matrix. Let $\rho^s$, $\rho^f$ and $c^s$, $c^f$ be the density and specific heat capacity of fluid $f$ and soil $s$. If assuming the soil matrix is fully saturated with groundwater, the Darcy velocity of which is described by the vector $q$, then the conservation equation writes as
 \begin{equation}
+\label{eqn:heat_transport_soil}
 \frac{\partial}{\partial t}  \left[ \epsilon \rho^f c^f + ( 1-\epsilon ) \rho^s c^s \right]  T_s 
 + \nabla \cdot \left(  \rho^f c^f \mathbf{q} T_s  \right) 
 - \nabla \cdot \left(  \Lambda^s \cdot \nabla T_s  \right) = H_s,  
@@ -199,6 +200,7 @@ for the pipelines, and
 \end{eqnarray}
 for the grout zones. If using Galerkin Finite Element Method (GFEM), the above equation \ref{eqn:gov_eqn_bhe_pipe_dis} and \ref{eqn:gov_eqn_bhe_grout_dis} can be written in the matrix form. 
 \begin{equation}
+\label{eqn:gov_eqn_bhe_matrix}
 \bm{P}^\pi \cdot \bm{\dot{T}}^\pi + ( \bm{L^\pi} + \bm{R^\pi} ) \cdot \bm{T^\pi} = \bm{W}^\pi - \bm{R}^{\pi s} \cdot \bm{T}^{s}
 \end{equation}
 with the time derivative related mass matrix $\bm{P}^\pi$ formulated as
@@ -335,7 +337,98 @@ For the heat exchange terms $\bm{R_{\pi s}}$ and $\bm{R_{s \pi}}$,
        \end{array} \right.
 \end{equation}
 \subsection{Assembly of the Global Equation System}
+In order to simulate the heat transfer between BHEs and the surrounding soil, the governing equations for the pipeline and grout zones must be assemble into a global matrix system together with the linearized heat transport equaiton of the soil. When the equation \ref{eqn:gov_eqn_bhe_matrix} is combined with the matrix form of equation \ref{eqn:heat_transport_soil}, the global matrix system writes as
+\begin{equation}
+\label{eqn:global_matrix_form}
+\left( \begin{array}{cc}
+\bm{P}^s & \bm{0} \\
+\bm{0}   & \bm{P}^\pi
+\end{array} \right) 
+\cdot 
+\left(
+\begin{array}{c}
+\bm{\dot{T}}^s \\
+\bm{\dot{T}}^\pi
+\end{array} \right) 
++ \left( \begin{array}{cc}
+\bm{L}^s - \bm{R}^\pi & \bm{R}^{s \pi}\\
+\bm{R}^{\pi s} & \bm{T}^\pi
+\end{array}
+\right) 
+\cdot 
+\left(\begin{array}{c}
+\bm{T}^s \\
+\bm{T}^\pi
+\end{array} \right) 
+= \left( 
+\begin{array}{c}
+\bm{W}^s \\
+\bm{W}^\pi \\
+\end{array} \right). 
+\end{equation}
 
-
-
+When Euler time discretization is applied on the above equation, the fully linearized global matrix system looks like
+\begin{equation}
+\left(
+\begin{array}{cc}
+\bm{A}^s & \bm{R}^{s \pi} \\
+\bm{R}^{s \pi} & \bm{A}^\pi
+\end{array}
+\right) 
+\cdot 
+\left(
+\begin{array}{c}
+\bm{T}^s \\
+\bm{T}^\pi
+\end{array}
+\right)_{n+1}
+= 
+\left( 
+\begin{array}{c}
+\bm{B}^s \\
+\bm{B}^\pi
+\end{array}
+\right)_{n+1, n} , 
+\end{equation}
+where $n$ and $n+1$ represents the previous and current time step. If a corrector recurrence scheme is applied, then the left-hand-side matrix and right-hand-side vectors writes as 
+\begin{eqnarray}
+\label{eqn:linearized_matrix_system}
+\bm{A}^s & = & \frac{1}{\Delta t_n} \bm{P}^s + \theta \left( \bm{L}^s - \bm{R}^\pi \right) \nonumber \\ 
+\bm{B}^s & = & \left( \frac{1}{\Delta t_n} \bm{P}^s - (1 - \theta) \left( \bm{L}^s - \bm{R}^\pi \right) \right) \cdot \bm{T}_n^s + \bm{W}_{n+1}^s \theta + \bm{W}_{n}^s (1 - \theta) \nonumber \\
+\bm{A}^\pi & = & \frac{1}{\Delta t_n} \bm{P}^\pi + \theta \bm{L}^\pi \nonumber \\ 
+\bm{B}^\pi & = & \left( \frac{1}{\Delta t_n} \bm{P}^\pi - (1 - \theta) \bm{L}^\pi \right) \cdot \bm{T}_n^\pi + \bm{W}_{n+1}^\pi \theta + \bm{W}_{n}^\pi (1 - \theta) 
+\end{eqnarray}
 \subsection{Picard Iterations and Time Step Schemes}
+After the $\bm{A}$ matrices and $\bm{B}$ vectors have been assembled, the OpenGeoSys software employs a linear solver the calculate the $\bm{T}$ values for the new time step, based on the previous time step value. Notice that, the heat exchange coefficients $\bm{R^{s \pi}}$ and $\bm{R^{\pi s}}$ will be multiplied with the temperature values, and producing the heat exchange flux between the soil and the BHE domain. This term is linearly dependent on the temperature difference. However, when a new set of temperature values are produced, the heat flux changes respectively. Therefore, a Picard iteration scheme has been employed by the OpenGeoSys software, to solve for converged temperature values. The following log message from a typical simulation run demonstrates the Picard iteration behavior. 
+\begin{Verbatim}[gobble=0, 
+                 frame=single, 
+                 label=Log File of A Simulation Run, 
+                 numbers=left]
+      ================================================
+    ->Process 1: HEAT_TRANSPORT_BHE
+      ================================================
+    PCS non-linear iteration: 0/2
+      Assembling equation system...
+      Calling linear solver...
+	  SpBICGSTAB iteration: 2/1000 
+      -->End of PICARD iteration: 0/2
+         PCS error: 0.00110317
+         ->Euclidian norm of unknowns: 0.00596578
+    PCS non-linear iteration: 1/2
+      Assembling equation system...
+      Calling linear solver...
+	  SpBICGSTAB iteration: 2/1000 
+      -->End of PICARD iteration: 1/2
+         PCS error: 1.37569e-006
+         ->Euclidian norm of unknowns: 1.82299e-005
+This step is accepted.
+Data output: Polyline profile - BHE_1
+#############################################################
+\end{Verbatim}
+As can be found in the log file, one iteration of the HEAT\_TRANSPORT\_BHE process is needed. Conventionally, the tolerance of Picard iteration is set to $1.0 \times 10^{-4}$, and the simulation normally converges after one iteration. 
+
+In the work of Diersch et al \cite{Diersch2011a} \cite{FEFLOW2014}, they suggested to inverse the matrix system for BHE domain separately, then integrate its influence into the soil domain by a \textit{Schur complement} operation. Such procedures is reasonable as the BHE domain is typically small (degree of freedom number in the order of thousands by thousands). However, non-linearity of the governing equations cannot be eliminated without an iteration step. Their test run also shows that one iteration is necessary to obtain the accurate temperature values. Considering only little effort is added to the linear solver, we choose to directly iterate the linearized matrix system of \ref{eqn:linearized_matrix_system}. Our simulation shows that convergence can be achieve after one Picard iteration in nearly all simulations. 
+
+% TODO, time stepping scheme. 
+
+
