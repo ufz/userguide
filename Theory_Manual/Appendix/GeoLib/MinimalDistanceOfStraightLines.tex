@@ -1,0 +1,75 @@
+\section{Intersection of Straight Lines}
+Let $\vp, \vq \in \R^3$ be two position vectors and $\vv, \vw \in \R^3$
+directional vectors. Straight lines are described by the following equations:
+\begin{equation}
+g(\lambda) = \vp + \lambda \vv \nn
+\end{equation}
+and
+\begin{equation}
+h(\mu) = \vq + \mu \vw. \nn
+\end{equation}
+Points along straight lines can be specified by fixed $\lambda$ and $\mu$
+repectively. The distance of two points, the first within $g(\lambda)$, the
+second within $h(\mu)$, can be written as:
+\begin{equation*}
+\varrho(\lambda, \mu) = \vnorm{g(\lambda) - h(\mu)}_2
+	= \vnorm{\vp - \vq + \lambda \vv - \mu \vw}_2
+	= \sqrt{\underbrace{\sum_{i=1}^3
+		\left(p_i - q_i + \lambda v_i - \mu w_i \right)^2}_{:= f(\lambda,\mu)}}
+\end{equation*}
+The distance function can only be minimal if
+\begin{equation*}
+\nabla \varrho (\lambda, \mu) = \left(
+	\dfrac{\partial \varrho}{\partial \lambda} (\lambda, \mu),
+	\dfrac{\partial \varrho}{\partial \mu} (\lambda, \mu)
+	\right)
+	= \left(
+	\dfrac{\partial f}{\partial \lambda}(\lambda, \mu)
+		\dfrac{1}{\sqrt{f(\lambda, \mu)}},
+	\dfrac{\partial f}{\partial \mu}(\lambda, \mu)
+		\dfrac{1}{\sqrt{f(\lambda, \mu)}} \right) = 0.
+\end{equation*}
+\begin{align*}
+f(\lambda, \mu)
+	&= \sum_{i=1}^3 \left(p_i - q_i + \lambda v_i - \mu w_i \right)^2 \nn \\
+	&= \sum_{i=1}^3 \left( p_i^2 - p_i q_i + \lambda p_i v_i - \mu p_i w_i \right)
+		+ \left(q_i p_i - q_i^2 + \lambda q_i v_i - \mu q_i w_i \right) \nn \\
+		&\qquad + \left(\lambda p_i v_i - \lambda q_i v_i + \lambda^2 v_i^2 - \lambda \mu v_i w_i \right)
+		+ \left(\mu p_i w_i - \mu q_i w_i + \lambda \mu v_i w_i - \mu^2 w_i^2 \right) \nn \\
+	&= \sum_{i=1}^3 p_i^2 + q_i^2 - 2 p_i q_i + 2 \lambda p_i v_i
+		- 2 \lambda q_i v_i - 2 \mu p_i w_i + 2 \mu w_i q_i
+		- 2 \lambda \mu v_i w_i + \lambda^2 v_i^2 + \mu^2 w_i^2 \\
+\dfrac{\partial f}{\partial \lambda}(\lambda, \mu)
+	&= 2 \sum_{i=1}^3 p_i v_i - q_i v_i - \mu v_i w_i + v_i^2 \lambda \\
+\dfrac{\partial f}{\partial \mu}(\lambda, \mu)
+	&= 2 \sum_{i=1}^3 - p_i w_i + q_i w_i - \lambda v_i w_i + w_i^2 \mu
+\end{align*}
+The terms
+\begin{equation*}
+\dfrac{\partial f}{\partial \lambda}(\lambda, \mu)
+	\dfrac{1}{\sqrt{f(\lambda, \mu)}}
+\quad \textnormal{and} \quad
+\dfrac{\partial f}{\partial \mu}(\lambda, \mu)
+	\dfrac{\partial f}{\partial \mu}(\lambda, \mu)
+\end{equation*}
+vanishs, if
+\begin{equation*}
+\sum_{i=1}^3 p_i v_i - q_i v_i - \mu v_i w_i + v_i^2 \lambda = 0
+\quad \textnormal{and} \quad
+\sum_{i=1}^3 - p_i w_i + q_i w_i - \lambda v_i w_i + w_i^2 \mu = 0
+\end{equation*}
+holds. It results the following system of linear equations
+\begin{equation*}
+\begin{pmatrix}
+\sum_{i=1}^3 v_i^2 & - \sum_{i=1}^3 v_i w_i \\
+- \sum_{i=1}^3 w_i v_i & \sum_{i=1}^3 w_i^2 \\
+\end{pmatrix}
+\begin{pmatrix}
+\lambda \\ \mu
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sum_{i=1}^3 v_i (q_i - p_i) \\
+\sum_{i=1}^3 w_i (p_i - q_i)
+\end{pmatrix}
+\end{equation*}
