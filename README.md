@@ -3,7 +3,5 @@
 
 #### Downloads
 
-- [Theory Manual](https://svn.ufz.de/jenkins/job/OGS-6/job/User%20Guide/lastSuccessfulBuild/artifact/Theory_Manual/Theory_Manual.pdf)
-- [User Manual](https://svn.ufz.de/jenkins/job/OGS-6/job/User%20Guide/lastSuccessfulBuild/artifact/User_Manual/User_Manual.pdf)
-
-
+- [Theory Manual](http://docs.opengeosys.org/assets/releases/head/docs/Theory-Manual.pdf)
+- [User Manual](http://docs.opengeosys.org/assets/releases/head/docs/User-Manual.pdf)
