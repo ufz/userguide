@@ -136,6 +136,7 @@ o2             & $-\Phi_{fog}^{2U}(T_{g4}-T_{o2})$
 %%
 
 \subsection{Mesh Arrangement}
+\label{sec:mesh_arrangement}
 To simulate the heat transport process together with BHEs, a dual-continuum approach has been adopted to treat the soil and BHEs part respectively. For the soil part, prism elements are used to discretize the 3D domain. In addition to that, 1D line elements along the edge of the prism elements are chosen to form the 2nd domain, representing BHEs. The example illustrated in Figure \ref{fig:simple_mesh} contains a mesh structure with 12 nodes and 6 element. Node "0" - "11" forms the 3 prism elements, which refers to the the soil domain. The BHE domain is composed of 3 line elements in red color. Notice the node "2", "5", "8" and "11" are both employed by the prim and the line elements. As a result, the total number of nodes remains the same and the number of elements slightly increases. In soil domain, there is only one primary variable, the soil temperature, on each node. While in the BHE domain, each node has 4, 8, or 3 primary variables, depending on the type of the BHE. Table \ref{tab:bhe_primary_variables} summarizes these combinations. 
 %%
 \begin{table}
