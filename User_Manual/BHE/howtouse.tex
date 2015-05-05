@@ -79,14 +79,81 @@ To build the source code, choose from the file menu "BUILD", and then click on t
 
 \section{Define Heat Transport Process with BHEs}
 
+In the last section, the OpenGeoSys code was successfully compiled and an ogs.exe executable file has been built. In this section, we will introduce the process of setting up a modeling project to simulate heat transport process with borehole heat exchangers.  
+
+\subsection{Process Definition}
+
+Originally, the heat transport simulation in an OpenGeoSys project is performed by defining the process as \texttt{HEAT\_TRANSPORT}. To include the interaction with BHEs, we have introduced a new process named as "\texttt{HEAT\_TRANSPORT\_BHE}". In the following, a PCS file is introduced, with one \texttt{GROUNDWATER\_FLOW} and one \texttt{HEAT\_TRANSPORT\_BHE} process defined in it. 
+
+\begin{Verbatim}[gobble=0, 
+                 frame=single, 
+                 label=PCS File Definition including Interaction with Borehole Heat Exchangers, 
+                 numbers=left]
+#PROCESS
+ $PCS_TYPE
+  GROUNDWATER_FLOW
+ $DEACTIVATED_SUBDOMAIN
+  1
+  1 
+#PROCESS
+ $PCS_TYPE
+  HEAT_TRANSPORT_BHE
+ $PRIMARY_VARIABLE
+  TEMPERATURE_SOIL
+ $BOUNDARY_CONDITION_OUTPUT
+#STOP
+\end{Verbatim}
+
+\subsection{Deactivated Sub-domains}
+In the above PCS file, some readers might have already noticed that there are two numbers given under the key word \texttt{\$DEACTIVATED\_SUBDOMAIN}. The first number "1" on line \#7 means there is one sub-domain deactivated for the \texttt{GROUNDWATER\_FLOW} process, and the second number "1" on line \#8 tells the index of this deactivated domain. So why does the sub-domain "1" need to be turned off? This is because the sub-domain "0" in this project is referring to the soil matrix, while the sub-domain "1" is the borehole heat exchanger. Since the BHE is grouted and impermeable, it is not necessary to calculate groundwater flow through a BHE. Therefore its representative sub-domain is deactivated. 
+
+\subsection{Primary Variables}
+
+From the section \ref{sec:model_concept} and \ref{sec:gov_eqns}, we know that there are multiple primary variables applied in the BHE simulation. In the soil sub-domain primary variable is the soil temperature, while on the BHE they are the temperatures of inlet outlet pipes and their surrounding grout zones. The key words used for these processes, are summerized in Table \ref{tab:pvar_keywords}. In section \ref{sec:temp_output}, when the output is configured, these key words will be used. 
+
+\begin{table}
+\caption{Key words used in OGS BHE project for different primary variables. }
+\label{tab:pvar_keywords}
+\centering
+\begin{tabular}{l l }
+\hline
+Symbols    & Key words  \\
+\hline
+$T_s$             & \texttt{TEMPERATURE\_SOIL} \\
+$T_{i1}$          & \texttt{TEMPERATURE\_IN\_1} \\
+$T_{i2}$          & \texttt{TEMPERATURE\_IN\_2} \\
+$T_{o1}$          & \texttt{TEMPERATURE\_OUT\_1} \\
+$T_{o2}$          & \texttt{TEMPERATURE\_OUT\_1} \\
+$T_{g1}$          & \texttt{TEMPERATURE\_G\_1} \\
+$T_{g2}$          & \texttt{TEMPERATURE\_G\_2} \\
+$T_{g3}$          & \texttt{TEMPERATURE\_G\_3} \\
+$T_{g4}$          & \texttt{TEMPERATURE\_G\_4} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
 \section{Geometry of BHEs}
+
+
 
 \section{Mesh of BHEs}
 
+
+
 \section{Parameters of BHEs}
 
-\section{Output Pipe and Grout Temperatures in the BHEs}
 
-\section{Visualization of the Temperatures}
+
+\section{Output of Temperatures in the BHEs}
+\label{sec:temp_output}
+
+
+\section{Visualization of the Temperatures Evolution}
+
+\subsection{Visualization of Soil Temperatures}
+
+\subsection{Visualization of BHE Temperatures}
 
 
