@@ -170,9 +170,45 @@ As shown in the GLI file above,  "\texttt{BHE\_1}" is refering to a polyline com
 
 \section{Mesh of BHEs}
 
+In section \ref{sec:mesh_arrangement}, we have already introduced that the BHEs are treated in the OGS model as a second domain. Generally, the soil matrix is meshed with 3D elments such as prisms. In comparison to standard mesh file, the location of all mesh nodes remains the same, while additional 1D elments are added at the end of the element section, to represent the BHEs. 
 
+\begin{Verbatim}[gobble=0, 
+                 frame=single, 
+                 label=The Element Section in Mesh File, 
+                 numbers=left]
+$ELEMENTS
+  155062
+0 0 pris 1673 1582 1671 598 507 596 
+...
+14650 0 pris 7627 7614 7541 6552 6539 6466 
+14651 1 pris 9198 9107 9196 8123 8032 8121 
+...
+23022 1 pris 11927 11914 11841 10852 10839 10766 
+23023 2 pris 13498 13407 13496 12423 12332 12421 
+...
+56510 2 pris 29127 29114 29041 28052 28039 27966 
+56511 3 pris 30698 30607 30696 29623 29532 29621 
+...
+154881 3 pris 79652 79639 79566 78577 78564 78491 
+154882 4 line 4 1079 
+...
+154926 4 line 47304 48379 
+154927 5 line 5 1080 
+...
+154971 5 line 47305 48380 
+154972 6 line 6 1081 
+...
+155016 6 line 47306 48381 
+155017 7 line 7 1082 
+...
+155061 7 line 47307 48382 
+#STOP
+\end{Verbatim} 
+
+In the mesh file, different BHEs are marked with different material group indices. Taking the above mesh file as an example, the first number in each row denotes the indices of the element. After that comes the indices of the material group. In this project, there are all together 8 material groups, with an index from 0 to 7. The material group \#0, \#1, \#2 and \#3 refers to the four soil layers in the simulation domain. That is why they are meshed with 3D prism elements. For the material group \#4, \#5, \#6 and \#7, each of them represents a BHE, which is meshed with 1D line elements. 
 
 \section{Parameters of BHEs}
+\label{sec:mmp_bhe_def}
 
 
 
