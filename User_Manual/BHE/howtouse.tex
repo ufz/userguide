@@ -205,12 +205,194 @@ $ELEMENTS
 #STOP
 \end{Verbatim} 
 
-In the mesh file, different BHEs are marked with different material group indices. Taking the above mesh file as an example, the first number in each row denotes the indices of the element. After that comes the indices of the material group. In this project, there are all together 8 material groups, with an index from 0 to 7. The material group \#0, \#1, \#2 and \#3 refers to the four soil layers in the simulation domain. That is why they are meshed with 3D prism elements. For the material group \#4, \#5, \#6 and \#7, each of them represents a BHE, which is meshed with 1D line elements. 
+In the mesh file, different BHEs are marked with different material group indices. Taking the above mesh file as an example, the first number in each row denotes the indices of the element. After that comes the indices of the material group. In this project, there are all together 8 material groups, with an index from 0 to 7. The material group \#0, \#1, \#2 and \#3 refers to the four soil layers in the simulation domain. That is why they are meshed with 3D prism elements. For the material group \#4, \#5, \#6 and \#7, each of them represents a BHE, which is meshed with 1D line elements. Since different BHEs might have different configurations, such as the depth, u-tube diameters, and flow rates etc, these BHE parameters are given as part of the material group definition in the MMP file. 
 
 \section{Parameters of BHEs}
 \label{sec:mmp_bhe_def}
 
+\begin{Verbatim}[gobble=0, 
+                 frame=single, 
+                 label=Definition of BHE parameters in MMP File, 
+                 numbers=left]
+; properties of BHE 1 
+#MEDIUM_PROPERTIES
+ $GEO_TYPE
+   POLYLINE BHE_1
+ $BOREHOLE_HEAT_EXCHANGER
+  BHE_TYPE
+    BHE_TYPE_1U
+  BHE_BOUNDARY_TYPE
+    POWER_IN_WATT_CURVE_FIXED_FLOW_RATE  ; 
+  BHE_POWER_IN_WATT_CURVE_IDX
+    1
+  BHE_LENGTH
+    46
+  BHE_DIAMETER
+    0.15
+  BHE_REFRIGERANT_FLOW_RATE
+    9.17E-05
+  BHE_INNER_RADIUS_PIPE
+    0.0131
+\end{Verbatim} 
 
+\begin{table}
+\caption{Parameters of BHE configuration available in the MMP file. }
+\label{tab:pvar_keywords}
+\centering
+\begin{tabular}{C{2.5cm} C{3cm} C{1.5cm} C{3cm} L{5cm} }
+\hline
+Key Words & Value to Fill & Unit 
+& Default Value & Remarks\\
+\hline
+{\small
+\texttt{BHE\_TYPE} 
+}
+& 
+{\small
+\texttt{BHE\_TYPE\_1U} \newline
+\texttt{BHE\_TYPE\_2U} \newline
+\texttt{BHE\_TYPE\_CXA}\newline
+\texttt{BHE\_TYPE\_CXC}  
+}
+& -  & &  specify the type of BHE \\
+\hline
+{\tiny
+\texttt{BHE\_BOUNDARY\_TYPE} 
+}
+& 
+{\tiny 
+\texttt{FIXED\_INFLOW\_TEMP} \newline
+\texttt{FIXED\_INFLOW\_TEMP\_CURVE} \newline
+\texttt{POWER\_IN\_WATT} \newline
+\texttt{POWER\_IN\_WATT\_CURVE\_FIXED\_DT} \newline
+\texttt{POWER\_IN\_WATT\_CURVE\_FIXED\_FLOW\_RATE} \newline
+\texttt{FIXED\_TEMP\_DIFF}
+}
+& -  & &  different boundary conditions for the BHE \\
+\hline
+{\tiny
+\texttt{BHE\_POWER\_IN\_WATT\_VALUE} 
+}
+& 
+{\small
+Double Number
+}
+& $W$  & &  
+A fixed power value. \newline
+Positive means heating the BHE, Negative means cooling.  \\
+\hline
+{\tiny
+\texttt{BHE\_POWER\_IN\_WATT\_CURVE\_IDX} 
+}
+& 
+{\small
+Integer Number
+}
+& -  & &  
+Index of curve in the RFD file  \\
+\hline
+{\tiny
+\texttt{BHE\_DELTA\_T\_VALUE} 
+}
+& 
+{\small
+Double Number
+}
+& $K$  & &  
+Only when the boundary type \texttt{FIXED\_TEMP\_DIFF} is chosen  \\
+\hline
+{\tiny
+\texttt{BHE\_SWITCH\_OFF\_THRESHOLD} 
+}
+& 
+{\small
+Double Number
+}
+& $K$  & &  
+\todo{When the $\Delta T$ value is smaller than this threshold, the BHE will be switched off}  \\
+\hline
+{\small
+\texttt{BHE\_LENGTH} 
+}
+& 
+{\small
+Double Number
+}
+& $m$  & &  
+Length of the BHE  \\
+\hline
+{\small
+\texttt{BHE\_DIAMETER} 
+}
+& 
+{\small
+Double Number
+}
+& $m$  & &  
+Diameter of the borehole  \\
+\hline
+{\tiny
+\texttt{BHE\_REFRIGERANT\_FLOW\_RATE} 
+}
+& 
+{\small
+Double Number
+}
+& $m^3/s$  & &  
+flow rate of circulating refrigerant inside the pipeline of the BHE  \\
+\hline
+{\tiny
+\texttt{BHE\_INNER\_RADIUS\_PIPE} 
+}
+& 
+{\small
+Double Number
+}
+& $m$  & &  
+Inner radius of the pipe  \\
+\hline
+{\tiny
+\texttt{BHE\_OUTER\_RADIUS\_PIPE} 
+}
+& 
+{\small
+Double Number
+}
+& $m$  & &  
+Outer radius of the pipe  \\
+\hline
+{\tiny
+\texttt{BHE\_PIPE\_IN\_WALL\_THICKNESS} 
+}
+& 
+{\small
+Double Number
+}
+& $m$  & &  
+Inlet pipe wall thickness  \\
+\hline
+{\tiny
+\texttt{BHE\_PIPE\_OUT\_WALL\_THICKNESS} 
+}
+& 
+{\small
+Double Number
+}
+& $m$  & &  
+Outlet pipe wall thickness  \\
+\hline
+{\small
+\texttt{BHE\_FLUID\_TYPE} 
+}
+& 
+{\small
+Integer Number
+}
+& $m$  & &  
+Index of fluid defined in the MFP file  \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Output of Temperatures in the BHEs}
 \label{sec:temp_output}
